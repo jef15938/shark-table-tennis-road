@@ -35,7 +35,6 @@
 
         .progress-container {
             width: 100%;
-            /* max-width: 500px; */
             height: 20px;
             background-color: #eee;
             border-radius: 15px;
@@ -92,8 +91,10 @@
             display: block;
             position: absolute;
             right: 6px;
-            top: 2px;
+            top: 0px;
             font-size: 16px;
+            font-weight: bold;
+            line-height: 20px;
             content: attr(data-score)"%";
 
         }
@@ -108,9 +109,17 @@
         }
 
         .view-select {
-            font-size: 20px;
+            font-size: 16px;
             border: 1px solid;
             padding: 10px;
+        }
+
+        .ui-selectmenu-button-text {
+            display: none;
+        }
+
+        .ui-loader-header {
+            display: none;
         }
     </style>
 
@@ -118,8 +127,8 @@
         <div class="select-container">
             <select name="顯示模式" id="view-select" class="view-select">
                 <option value="預設" selected>預設</option>
-                <option value="熟練度 由低到高">熟練度低到高</option>
-                <option value="熟練度 由高到低">熟練度高到低</option>
+                <option value="熟練度由低到高">熟練度 由低到高</option>
+                <option value="熟練度由高到低">熟練度 由高到低</option>
             </select>
         </div>
         <div class="main" id="main">
@@ -127,7 +136,8 @@
     </div>
 
     <script>
-        var userConfig = getConfig();
+        // var userConfig = getConfig();
+        window.localStorage.removeItem("config");
 
         var dataList = [
             { id: "d1", name: '123', score: 50 },
@@ -144,10 +154,10 @@
             if ("預設" === chooseValue) {
                 renderData(dataList);
             }
-            if ("熟練度 由低到高" === chooseValue) {
+            if ("熟練度由低到高" === chooseValue) {
                 renderData([...dataList].sort((a, b) => a.score - b.score));
             }
-            if ("熟練度 由高到低" === chooseValue) {
+            if ("熟練度由高到低" === chooseValue) {
                 renderData([...dataList].sort((a, b) => b.score - a.score));
             }
         })

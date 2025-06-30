@@ -1,0 +1,246 @@
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>鯊宜的桌球之路</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/mobile/1.5.0-rc1/jquery.mobile-1.5.0-rc1.min.js"></script>
+</head>
+
+<body>
+    <style>
+        html {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            margin: 0;
+            width: 100%;
+            min-height: 100dvh;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .progress-container {
+            width: 100%;
+            /* max-width: 500px; */
+            height: 20px;
+            background-color: #eee;
+            border-radius: 15px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .item+.item {
+            margin-top: 12px;
+        }
+
+        .progress-bar {
+            border-radius: 15px;
+            position: relative;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+            background-size: 100% 100%;
+        }
+
+        .progress-bar.score1 {
+            background: #ff4d4f;
+        }
+
+        .progress-bar.score1::after {
+            color: #fff;
+        }
+
+        .progress-bar.score2 {
+            background: #faad14;
+        }
+
+        .progress-bar.score2::after {
+            color: #fff;
+        }
+
+        .progress-bar.score3 {
+            background: #40a9ff;
+        }
+
+        .progress-bar.score3::after {
+            color: #fff;
+        }
+
+        .progress-bar.score4 {
+            background: #52c41a;
+        }
+
+        .progress-bar.score4::after {
+            color: #fff;
+        }
+
+
+        .progress-bar::after {
+            display: block;
+            position: absolute;
+            right: 6px;
+            top: 2px;
+            font-size: 16px;
+            content: attr(data-score)"%";
+
+        }
+
+        .item__title {
+            font-size: 20px;
+        }
+
+        .select-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .view-select {
+            font-size: 20px;
+            border: 1px solid;
+            padding: 10px;
+        }
+    </style>
+
+    <div class="container">
+        <div class="select-container">
+            <select name="顯示模式" id="view-select" class="view-select">
+                <option value="預設" selected>預設</option>
+                <option value="熟練度 由低到高">熟練度低到高</option>
+                <option value="熟練度 由高到低">熟練度高到低</option>
+            </select>
+        </div>
+        <div class="main" id="main">
+        </div>
+    </div>
+
+    <script>
+        var userConfig = getConfig();
+
+        var dataList = [
+            { id: "d1", name: '123', score: 50 },
+            { id: "d2", name: '456', score: 60 },
+            { id: "d3", name: '123', score: 20 },
+            { id: "d4", name: '456', score: 80 }
+        ];
+
+        renderData(dataList);
+
+        document.getElementById("view-select").addEventListener("change", function () {
+            console.log(this.value);
+            const chooseValue = this.value;
+            if ("預設" === chooseValue) {
+                renderData(dataList);
+            }
+            if ("熟練度 由低到高" === chooseValue) {
+                renderData([...dataList].sort((a, b) => a.score - b.score));
+            }
+            if ("熟練度 由高到低" === chooseValue) {
+                renderData([...dataList].sort((a, b) => b.score - a.score));
+            }
+        })
+
+        function renderData(dataList) {
+            const main = document.getElementById("main");
+            main.innerHTML = "";
+
+            dataList.forEach(data => {
+                var classNameForStyle = "";
+                if (data.score <= 25) {
+                    classNameForStyle = "score1";
+                }
+                else if (data.score <= 50) {
+                    classNameForStyle = "score2";
+                }
+                else if (data.score <= 75) {
+                    classNameForStyle = "score3";
+                }
+                else if (data.score <= 100) {
+                    classNameForStyle = "score4";
+                }
+
+                var item = document.createElement("div");
+                item.className = "item";
+                item.innerHTML = `
+            <div class="item__title">${data.name}</div>
+            <div class="progress-container">
+                <div id="${data.id}" class="progress-bar ${classNameForStyle}" data-score="${data.score}"></div>
+            </div>
+            `;
+
+                main.append(item);
+                // document.getElementById(data.id).style.width = data.score + "%";
+                // progressBar.getElementsByClassName("progress-bar")[0].width = "30%";
+            });
+
+            setTimeout(function () {
+                dataList.forEach(data => {
+                    document.getElementById(data.id).style.width = data.score + "%";
+                });
+            }, 10);
+        }
+
+        // 使用禮物 action
+        $(".main-container").on("taphold", " .box:not(.back)", function (event) {
+            if ($(".main-container > .box.back").length === 0) {
+                var target = $(event.currentTarget);
+                if (!target.hasClass("used")) {
+                    customConfirm(target);
+                }
+            }
+        });
+
+        function getConfig() {
+            var config = window.localStorage.getItem("config");
+            if (config === null) {
+                config = {
+                    ShowGetGiftBtn: "Y",
+                    Gift: {
+                        M: {
+                            IsOpen: "N",
+                            UseTime: ""
+                        },
+                        A: {
+                            IsOpen: "N",
+                            UseTime: ""
+                        },
+                        N: {
+                            IsOpen: "N",
+                            UseTime: ""
+                        },
+                        D: {
+                            IsOpen: "N",
+                            UseTime: ""
+                        },
+                        Y: {
+                            IsOpen: "N",
+                            UseTime: ""
+                        }
+                    },
+                    HasSeenCompleteMsg: "N"
+                }
+                window.localStorage.setItem("config", JSON.stringify(config));
+            } else {
+                config = JSON.parse(config);
+            }
+
+            return config;
+        }
+    </script>
+</body>
+
+
+
+</html>

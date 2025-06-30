@@ -1,0 +1,17 @@
+{
+  "name": "Shark PWA",
+  "short_name": "鯊宜的桌球之路",
+  "description": "鯊宜的桌球之路",
+  "scope": "/shark-table-tennis-road/",
+  "start_url": "/shark-table-tennis-road/",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "display": "standalone", 
+  "icons": [
+      {
+        "src": "./shark.jpg",
+        "type": "image/jpg",
+        "sizes": "400x400"
+      }
+  ]
+}

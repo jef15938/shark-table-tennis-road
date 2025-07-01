@@ -167,6 +167,11 @@
             display: none;
             position: fixed;
             z-index: 2;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: white;
         }
     </style>
 
@@ -363,7 +368,7 @@
                 URL.revokeObjectURL(url);
             }
             else if ("匯入" === func) {
-                $("[name=import-file]").fadeIn();
+                $("[name=import-file]").show();
             }
         });
 

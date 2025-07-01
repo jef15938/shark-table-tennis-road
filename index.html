@@ -361,7 +361,10 @@
                 URL.revokeObjectURL(url);
             }
             else if ("匯入" === func) {
-                $("[name=import-file]").trigger("click");
+                setTimeout(function () {
+                    $("[name=import-file]").trigger("click");
+                }, 1000)
+                // $("[name=import-file]").trigger("click");
             }
         });
 

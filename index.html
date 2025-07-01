@@ -36,7 +36,7 @@
         .progress-container {
             width: 100%;
             height: 20px;
-            background-color: #eee;
+            background-color: #ccc;
             border-radius: 15px;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
         }
@@ -86,10 +86,10 @@
             color: #fff;
         }
 
-
         .progress-bar::after {
             display: block;
             position: absolute;
+            /* left: calc(100% - 40px); */
             right: 6px;
             top: 0px;
             font-size: 16px;
@@ -100,7 +100,7 @@
         }
 
         .item__title {
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .select-container {
@@ -136,15 +136,17 @@
     </div>
 
     <script>
-        // var userConfig = getConfig();
-        window.localStorage.removeItem("config");
+        var dataList = getDataList() ?? [];
+        dataList = [...dataList]
+            .sort((a, b) => a.originOrder - b.originOrder)
+            .map(x => ({ ...x, id: "d" + x.originOrder }));
 
-        var dataList = [
-            { id: "d1", name: '123', score: 50 },
-            { id: "d2", name: '456', score: 60 },
-            { id: "d3", name: '123', score: 20 },
-            { id: "d4", name: '456', score: 80 }
-        ];
+        // var dataList = [
+        //     { id: "d1", name: '123', score: 20 },
+        //     { id: "d2", name: '456', score: 60 },
+        //     { id: "d3", name: '123', score: 20 },
+        //     { id: "d4", name: '456', score: 80 }
+        // ];
 
         renderData(dataList);
 
@@ -167,26 +169,13 @@
             main.innerHTML = "";
 
             dataList.forEach(data => {
-                var classNameForStyle = "";
-                if (data.score <= 25) {
-                    classNameForStyle = "score1";
-                }
-                else if (data.score <= 50) {
-                    classNameForStyle = "score2";
-                }
-                else if (data.score <= 75) {
-                    classNameForStyle = "score3";
-                }
-                else if (data.score <= 100) {
-                    classNameForStyle = "score4";
-                }
-
+                var classNameForStyle = getProgressBarClassName(data.score);
                 var item = document.createElement("div");
                 item.className = "item";
                 item.innerHTML = `
             <div class="item__title">${data.name}</div>
             <div class="progress-container">
-                <div id="${data.id}" class="progress-bar ${classNameForStyle}" data-score="${data.score}"></div>
+                <div id="${data.id}" class="progress-bar ${classNameForStyle}" data-name="${data.name}" data-score="${data.score}" data-origin-order="${data.originOrder}"></div>
             </div>
             `;
 
@@ -203,50 +192,63 @@
         }
 
         // 使用禮物 action
-        $(".main-container").on("taphold", " .box:not(.back)", function (event) {
-            if ($(".main-container > .box.back").length === 0) {
-                var target = $(event.currentTarget);
-                if (!target.hasClass("used")) {
-                    customConfirm(target);
-                }
+        $(".main").on("taphold", ".progress-container", function (event) {
+
+            var target = $(event.currentTarget);
+            var targetProgressBar = target.find(".progress-bar[data-score]");
+            var score = window.prompt("請輸入分數", targetProgressBar.attr("data-score"));
+            if (score) {
+                targetProgressBar.css("width", score + "%");
+                targetProgressBar.attr("data-score", score);
+                targetProgressBar.removeClass("score1 score2 score3 score4").addClass(getProgressBarClassName(score));
+
+                // 將資料塞回 localstorage
+                var resultDataList = $(".progress-bar").toArray().map(ele => ({
+                    name: $(ele).attr("data-name"),
+                    score: Number($(ele).attr("data-score")),
+                    originOrder: Number($(ele).attr("data-origin-order"))
+                }));
+                window.localStorage.setItem("dataList", JSON.stringify(resultDataList));
             }
         });
 
-        function getConfig() {
-            var config = window.localStorage.getItem("config");
-            if (config === null) {
-                config = {
-                    ShowGetGiftBtn: "Y",
-                    Gift: {
-                        M: {
-                            IsOpen: "N",
-                            UseTime: ""
-                        },
-                        A: {
-                            IsOpen: "N",
-                            UseTime: ""
-                        },
-                        N: {
-                            IsOpen: "N",
-                            UseTime: ""
-                        },
-                        D: {
-                            IsOpen: "N",
-                            UseTime: ""
-                        },
-                        Y: {
-                            IsOpen: "N",
-                            UseTime: ""
-                        }
-                    },
-                    HasSeenCompleteMsg: "N"
-                }
-                window.localStorage.setItem("config", JSON.stringify(config));
+        function getDataList() {
+            window.localStorage.removeItem("dataList");
+            var dataList = window.localStorage.getItem("dataList");
+            if (dataList === null) {
+                dataList = [
+                    { name: "🌱 基礎-正手對打", score: 75, originOrder: 0 },
+                    { name: "🌱 基礎-正手切球", score: 35, originOrder: 1 },
+                    { name: "🌱 基礎-反手對打", score: 75, originOrder: 2 },
+                    { name: "🌱 基礎-反手切球", score: 20, originOrder: 3 },
+                    { name: "⚔️ 攻擊-正手平拉", score: 35, originOrder: 4 },
+                    { name: "⚔️ 攻擊-正手平拉", score: 55, originOrder: 5 },
+                    { name: "👟 腳步&銜接-正手位接球(長球->殺球或拉球，短球->切球)", score: 55, originOrder: 6 },
+                    { name: "🔍 接球-接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球", score: 55, originOrder: 7 }
+                ];
+                window.localStorage.setItem("dataList", JSON.stringify(dataList));
             } else {
-                config = JSON.parse(config);
+                dataList = JSON.parse(dataList);
             }
 
-            return config;
+            return dataList;
+        }
+
+        function getProgressBarClassName(score) {
+            var classNameForStyle = "";
+            if (score <= 25) {
+                classNameForStyle = "score1";
+            }
+            else if (score <= 50) {
+                classNameForStyle = "score2";
+            }
+            else if (score <= 75) {
+                classNameForStyle = "score3";
+            }
+            else if (score <= 100) {
+                classNameForStyle = "score4";
+            }
+            return classNameForStyle;
         }
     </script>
 </body>

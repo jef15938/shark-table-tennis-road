@@ -39,7 +39,7 @@
 
         .progress-container {
             width: 100%;
-            height: 16px;
+            height: 18px;
             background-color: #ccc;
             border-radius: 15px;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -98,7 +98,7 @@
             top: 0px;
             font-size: 16px;
             font-weight: bold;
-            line-height: 16px;
+            line-height: 18px;
             content: attr(data-score)"%";
 
         }
@@ -120,7 +120,7 @@
             z-index: 1;
         }
 
-        .view-select {
+        select {
             font-size: 16px;
             border: 1px solid;
             padding: 10px;
@@ -133,11 +133,45 @@
         .ui-loader-header {
             display: none;
         }
+
+        .total {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            border-top: 1px solid;
+        }
+
+        .total__item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-basis: 25%;
+            border: 1px solid;
+            box-sizing: border-box;
+            border-top: none;
+            padding: 3px
+        }
+
+        .total-item__name {
+            flex-basis: 60px;
+        }
     </style>
 
     <div class="container">
         <div class="select-container">
-            <select name="顯示模式" id="view-select" class="view-select">
+            <select name="類別" id="type-select" style="margin-right: 16px;">
+                <option value="全部" selected>全部</option>
+                <option value="基礎">🌱 基礎</option>
+                <option value="攻擊">⚔️ 攻擊</option>
+                <option value="防守">☯️ 防守</option>
+                <option value="腳步">👟 腳步</option>
+                <option value="銜接">🧩 銜接</option>
+                <option value="發球">▶️ 發球</option>
+                <option value="接球">🔍 接球</option>
+                <option value="策略">🥋 策略</option>
+            </select>
+
+            <select name="顯示模式" id="view-select">
                 <option value="預設" selected>預設</option>
                 <option value="熟練度由低到高">熟練度 由低到高</option>
                 <option value="熟練度由高到低">熟練度 由高到低</option>
@@ -145,9 +179,50 @@
         </div>
         <div class="main" id="main">
         </div>
+
+        <div class="total">
+            <div class="total__item" style="flex-basis: 100%;justify-content: center;" data-type="全部">
+                <div class="total-item__name">全部</div>
+                <div class="total-item__count"></div>
+            </div>
+            <div class="total__item" data-type="基礎">
+                <div class="total-item__name">🌱 基礎</div>
+                <div class="total-item__count"></div>
+            </div>
+            <div class="total__item" data-type="攻擊">
+                <div class="total-item__name">⚔️ 攻擊</div>
+                <div class="total-item__count"></div>
+            </div>
+            <div class="total__item" data-type="防守">
+                <div class="total-item__name">☯️ 防守</div>
+                <div class="total-item__count"></div>
+            </div>
+            <div class="total__item" data-type="腳步">
+                <div class="total-item__name">👟 腳步</div>
+                <div class="total-item__count"></div>
+            </div>
+            <div class="total__item" data-type="銜接">
+                <div class="total-item__name">🧩 銜接</div>
+                <div class="total-item__count"></div>
+            </div>
+            <div class="total__item" data-type="發球">
+                <div class="total-item__name">▶️ 發球</div>
+                <div class="total-item__count"></div>
+            </div>
+            <div class="total__item" data-type="接球">
+                <div class="total-item__name">🔍 接球</div>
+                <div class="total-item__count"></div>
+            </div>
+            <div class="total__item" data-type="策略">
+                <div class="total-item__name">🥋 策略</div>
+                <div class="total-item__count"></div>
+            </div>
+        </div>
     </div>
 
     <script>
+        var typeSelectValue = "全部";
+        var viewSelectValue = "預設";
         var dataList = getDataList() ?? [];
         dataList = [...dataList]
             .sort((a, b) => a.originOrder - b.originOrder)
@@ -160,21 +235,52 @@
         //     { id: "d4", name: '456', score: 80 }
         // ];
 
-        renderData(dataList);
+        renderDataByCondition(typeSelectValue, viewSelectValue, dataList);
+
+        // 計算總數
+        $(".total__item[data-type]").each((index, element) => {
+            var dataType = $(element).attr("data-type");
+            var countElement = $(element).find(".total-item__count");
+
+            if ("全部" === dataType) {
+                countElement.text(dataList.length);
+            }
+            else {
+                countElement.text(dataList.filter(x => x.type === dataType).length);
+            }
+        });
+
+
+        document.getElementById("type-select").addEventListener("change", function () {
+            console.log(this.value);
+            typeSelectValue = this.value;
+            renderDataByCondition(typeSelectValue, viewSelectValue, dataList);
+        });
 
         document.getElementById("view-select").addEventListener("change", function () {
             console.log(this.value);
-            const chooseValue = this.value;
-            if ("預設" === chooseValue) {
-                renderData(dataList);
+            viewSelectValue = this.value;
+            renderDataByCondition(typeSelectValue, viewSelectValue, dataList);
+        });
+
+        function renderDataByCondition(typeSelectValue, viewSelectValue, dataList) {
+            var resultDataList = [...dataList];
+
+            if ("全部" !== typeSelectValue) {
+                resultDataList = resultDataList.filter(x => x.type === typeSelectValue);
             }
-            if ("熟練度由低到高" === chooseValue) {
-                renderData([...dataList].sort((a, b) => a.score - b.score));
+
+            if ("預設" === viewSelectValue) {
+                renderData(resultDataList);
             }
-            if ("熟練度由高到低" === chooseValue) {
-                renderData([...dataList].sort((a, b) => b.score - a.score));
+            if ("熟練度由低到高" === viewSelectValue) {
+                renderData(resultDataList.sort((a, b) => a.score - b.score));
             }
-        })
+            if ("熟練度由高到低" === viewSelectValue) {
+                renderData(resultDataList.sort((a, b) => b.score - a.score));
+            }
+
+        }
 
         function renderData(dataList) {
             const main = document.getElementById("main");
@@ -229,50 +335,51 @@
             var dataList = window.localStorage.getItem("dataList");
             if (dataList === null) {
                 dataList = [
-                    { name: "🌱 基礎-正手對打", score: 75, originOrder: 0 },
-                    { name: "🌱 基礎-正手切球", score: 35, originOrder: 1 },
-                    { name: "🌱 基礎-反手對打", score: 75, originOrder: 2 },
-                    { name: "🌱 基礎-反手切球", score: 20, originOrder: 3 },
+                    { name: "🌱 基礎-正手對打", score: 95, type: "基礎", originOrder: 0 },
+                    { name: "🌱 基礎-正手切球", score: 35, type: "基礎", originOrder: 1 },
+                    { name: "🌱 基礎-反手對打", score: 75, type: "基礎", originOrder: 2 },
+                    { name: "🌱 基礎-反手切球", score: 20, type: "基礎", originOrder: 3 },
 
-                    { name: "⚔️ 攻擊-正手平拉", score: 35, originOrder: 4 },
-                    { name: "⚔️ 攻擊-正手下旋拉", score: 55, originOrder: 5 },
-                    { name: "⚔️ 攻擊-正手殺球(高球平球)", score: 55, originOrder: 6 },
-                    { name: "⚔️ 攻擊-正手殺球(一般高度平球)", score: 55, originOrder: 7 },
-                    { name: "⚔️ 攻擊-正手殺球(高球下旋)", score: 55, originOrder: 8 },
-                    { name: "⚔️ 攻擊-正手挑球", score: 55, originOrder: 9 },
-                    { name: "⚔️ 攻擊-正手切球劈長", score: 55, originOrder: 10 },
-                    { name: "⚔️ 攻擊-正手撇直線長球", score: 55, originOrder: 11 },
-                    { name: "⚔️ 攻擊-反手平拉", score: 35, originOrder: 12 },
-                    { name: "⚔️ 攻擊-反手下旋拉", score: 55, originOrder: 13 },
-                    { name: "⚔️ 攻擊-反手殺球(高球平球)", score: 55, originOrder: 14 },
-                    { name: "⚔️ 攻擊-反手殺球(一般高度平球)", score: 55, originOrder: 15 },
-                    { name: "⚔️ 攻擊-反手殺球(高球下旋)", score: 55, originOrder: 16 },
-                    { name: "⚔️ 攻擊-反手挑球", score: 55, originOrder: 17 },
-                    { name: "⚔️ 攻擊-反手切球劈長", score: 55, originOrder: 18 },
-                    { name: "⚔️ 攻擊-反手擰球", score: 55, originOrder: 19 },
+                    { name: "⚔️ 攻擊-正手平拉", score: 35, type: "攻擊", originOrder: 4 },
+                    { name: "⚔️ 攻擊-正手下旋拉", score: 55, type: "攻擊", originOrder: 5 },
+                    { name: "⚔️ 攻擊-正手殺球(高球平球)", score: 55, type: "攻擊", originOrder: 6 },
+                    { name: "⚔️ 攻擊-正手殺球(一般高度平球)", score: 55, type: "攻擊", originOrder: 7 },
+                    { name: "⚔️ 攻擊-正手殺球(高球下旋)", score: 55, type: "攻擊", originOrder: 8 },
+                    { name: "⚔️ 攻擊-正手挑球", score: 55, type: "攻擊", originOrder: 9 },
+                    { name: "⚔️ 攻擊-正手切球劈長", score: 55, type: "攻擊", originOrder: 10 },
+                    { name: "⚔️ 攻擊-正手撇直線長球", score: 55, type: "攻擊", originOrder: 11 },
+                    { name: "⚔️ 攻擊-反手平拉", score: 35, type: "攻擊", originOrder: 12 },
+                    { name: "⚔️ 攻擊-反手下旋拉", score: 55, type: "攻擊", originOrder: 13 },
+                    { name: "⚔️ 攻擊-反手殺球(高球平球)", score: 55, type: "攻擊", originOrder: 14 },
+                    { name: "⚔️ 攻擊-反手殺球(一般高度平球)", score: 55, type: "攻擊", originOrder: 15 },
+                    { name: "⚔️ 攻擊-反手殺球(高球下旋)", score: 55, type: "攻擊", originOrder: 16 },
+                    { name: "⚔️ 攻擊-反手挑球", score: 55, type: "攻擊", originOrder: 17 },
+                    { name: "⚔️ 攻擊-反手切球劈長", score: 55, type: "攻擊", originOrder: 18 },
+                    { name: "⚔️ 攻擊-反手擰球", score: 55, type: "攻擊", originOrder: 19 },
 
-                    { name: "🛡️ 防守-正手切球擺短", score: 55, originOrder: 20 },
-                    { name: "🛡️ 防守-正手擋拉球(一般高度)", score: 55, originOrder: 21 },
-                    { name: "🛡️ 防守-正手擋拉球(半高)", score: 55, originOrder: 22 },
-                    { name: "🛡️ 防守-正手擋殺球", score: 55, originOrder: 23 },
-                    { name: "🛡️ 防守-反手擋拉球(一般高度)", score: 55, originOrder: 24 },
-                    { name: "🛡️ 防守-反手切球擺短", score: 55, originOrder: 25 },
-                    { name: "🛡️ 防守-反手擋拉球(半高)", score: 55, originOrder: 26 },
-                    { name: "🛡️ 防守-反手擋殺球", score: 55, originOrder: 27 },
-                    { name: "🛡️ 防守-反手側切", score: 55, originOrder: 28 },
+                    { name: "☯️ 防守-正手切球擺短", score: 55, type: "防守", originOrder: 20 },
+                    { name: "☯️ 防守-正手擋拉球(一般高度)", score: 55, type: "防守", originOrder: 21 },
+                    { name: "☯️ 防守-正手擋拉球(半高)", score: 55, type: "防守", originOrder: 22 },
+                    { name: "☯️ 防守-正手擋殺球", score: 55, type: "防守", originOrder: 23 },
+                    { name: "☯️ 防守-反手擋拉球(一般高度)", score: 55, type: "防守", originOrder: 24 },
+                    { name: "☯️ 防守-反手切球擺短", score: 55, type: "防守", originOrder: 25 },
+                    { name: "☯️ 防守-反手擋拉球(半高)", score: 55, type: "防守", originOrder: 26 },
+                    { name: "☯️ 防守-反手擋殺球", score: 55, type: "防守", originOrder: 27 },
+                    { name: "☯️ 防守-反手側切", score: 55, type: "防守", originOrder: 28 },
 
-                    { name: "👟 腳步&銜接-固定兩點(正反)", score: 55, originOrder: 29 },
-                    { name: "👟 腳步&銜接-固定三點(正反側身)", score: 55, originOrder: 30 },
-                    { name: "👟 腳步&銜接-不定點(正反)", score: 55, originOrder: 31 },
-                    { name: "👟 腳步&銜接-不定點(全台)", score: 55, originOrder: 32 },
-                    { name: "👟 腳步&銜接-正手位接球(長球->殺球或拉球，短球->切球)", score: 55, originOrder: 33 },
-                    { name: "👟 腳步&銜接-反手位接球(長球->殺球或拉球，短球->切球)", score: 55, originOrder: 34 },
+                    { name: "👟 腳步-固定兩點(正反)", score: 55, type: "腳步", originOrder: 29 },
+                    { name: "👟 腳步-固定三點(正反側身)", score: 55, type: "腳步", originOrder: 30 },
+                    { name: "👟 腳步-不定點(正反)", score: 55, type: "腳步", originOrder: 31 },
+                    { name: "👟 腳步-不定點(全台)", score: 55, type: "腳步", originOrder: 32 },
 
-                    { name: "▶️ 發球-發左旋/右旋+上旋/下旋+長球/短球+短空+快速球", score: 55, originOrder: 35 },
+                    { name: "🧩 銜接-正手位接球(長球->殺球或拉球，短球->切球)", score: 55, type: "銜接", originOrder: 33 },
+                    { name: "🧩 銜接-反手位接球(長球->殺球或拉球，短球->切球)", score: 55, type: "銜接", originOrder: 34 },
 
-                    { name: "🔍 接球-接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球", score: 55, originOrder: 36 },
+                    { name: "▶️ 發球-發左旋/右旋+上旋/下旋+長球/短球+短空+快速球", score: 55, type: "發球", originOrder: 35 },
 
-                    { name: "🥋 建立自己的策略-發短空->殺球", score: 55, originOrder: 37 }
+                    { name: "🔍 接球-接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球", score: 55, type: "接球", originOrder: 36 },
+
+                    { name: "🥋 策略-發短空->殺球", score: 55, type: "策略", originOrder: 37 }
                 ];
                 window.localStorage.setItem("dataList", JSON.stringify(dataList));
             } else {

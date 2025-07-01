@@ -35,6 +35,7 @@
 
         .main {
             margin-top: 40px;
+            padding-top: 15px;
         }
 
         .progress-container {
@@ -115,7 +116,8 @@
             right: 0px;
             width: 100%;
             background: #ffffffcc;
-            padding-top: 20px;
+            padding-top: 15px;
+            padding-bottom: 15px;
             padding-right: 20px;
             z-index: 1;
         }
@@ -137,8 +139,9 @@
         .total {
             display: flex;
             flex-wrap: wrap;
-            margin-top: 15px;
+            margin-top: 30px;
             border-top: 1px solid;
+            padding-bottom: 10px;
         }
 
         .total__item {
@@ -154,6 +157,10 @@
 
         .total-item__name {
             flex-basis: 60px;
+        }
+
+        .total-item__count {
+            font-weight: bolder;
         }
     </style>
 
@@ -182,7 +189,7 @@
 
         <div class="total">
             <div class="total__item" style="flex-basis: 100%;justify-content: center;" data-type="全部">
-                <div class="total-item__name">全部</div>
+                <div class="total-item__name">🏓 全部</div>
                 <div class="total-item__count"></div>
             </div>
             <div class="total__item" data-type="基礎">
@@ -280,6 +287,8 @@
                 renderData(resultDataList.sort((a, b) => b.score - a.score));
             }
 
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
+
         }
 
         function renderData(dataList) {
@@ -335,51 +344,51 @@
             var dataList = window.localStorage.getItem("dataList");
             if (dataList === null) {
                 dataList = [
-                    { name: "🌱 基礎-正手對打", score: 95, type: "基礎", originOrder: 0 },
-                    { name: "🌱 基礎-正手切球", score: 35, type: "基礎", originOrder: 1 },
-                    { name: "🌱 基礎-反手對打", score: 75, type: "基礎", originOrder: 2 },
-                    { name: "🌱 基礎-反手切球", score: 20, type: "基礎", originOrder: 3 },
+                    { name: "🌱 基礎-正手對打", score: 83, type: "基礎", originOrder: 0 },
+                    { name: "🌱 基礎-正手切球", score: 68, type: "基礎", originOrder: 1 },
+                    { name: "🌱 基礎-反手對打", score: 73, type: "基礎", originOrder: 2 },
+                    { name: "🌱 基礎-反手切球", score: 70, type: "基礎", originOrder: 3 },
 
-                    { name: "⚔️ 攻擊-正手平拉", score: 35, type: "攻擊", originOrder: 4 },
-                    { name: "⚔️ 攻擊-正手下旋拉", score: 55, type: "攻擊", originOrder: 5 },
-                    { name: "⚔️ 攻擊-正手殺球(高球平球)", score: 55, type: "攻擊", originOrder: 6 },
-                    { name: "⚔️ 攻擊-正手殺球(一般高度平球)", score: 55, type: "攻擊", originOrder: 7 },
-                    { name: "⚔️ 攻擊-正手殺球(高球下旋)", score: 55, type: "攻擊", originOrder: 8 },
-                    { name: "⚔️ 攻擊-正手挑球", score: 55, type: "攻擊", originOrder: 9 },
-                    { name: "⚔️ 攻擊-正手切球劈長", score: 55, type: "攻擊", originOrder: 10 },
-                    { name: "⚔️ 攻擊-正手撇直線長球", score: 55, type: "攻擊", originOrder: 11 },
-                    { name: "⚔️ 攻擊-反手平拉", score: 35, type: "攻擊", originOrder: 12 },
-                    { name: "⚔️ 攻擊-反手下旋拉", score: 55, type: "攻擊", originOrder: 13 },
-                    { name: "⚔️ 攻擊-反手殺球(高球平球)", score: 55, type: "攻擊", originOrder: 14 },
-                    { name: "⚔️ 攻擊-反手殺球(一般高度平球)", score: 55, type: "攻擊", originOrder: 15 },
-                    { name: "⚔️ 攻擊-反手殺球(高球下旋)", score: 55, type: "攻擊", originOrder: 16 },
-                    { name: "⚔️ 攻擊-反手挑球", score: 55, type: "攻擊", originOrder: 17 },
-                    { name: "⚔️ 攻擊-反手切球劈長", score: 55, type: "攻擊", originOrder: 18 },
-                    { name: "⚔️ 攻擊-反手擰球", score: 55, type: "攻擊", originOrder: 19 },
+                    { name: "⚔️ 攻擊-正手平拉", score: 78, type: "攻擊", originOrder: 4 },
+                    { name: "⚔️ 攻擊-正手下旋拉", score: 72, type: "攻擊", originOrder: 5 },
+                    { name: "⚔️ 攻擊-正手殺球(高球平球)", score: 70, type: "攻擊", originOrder: 6 },
+                    { name: "⚔️ 攻擊-正手殺球(一般高度平球)", score: 75, type: "攻擊", originOrder: 7 },
+                    { name: "⚔️ 攻擊-正手殺球(高球下旋)", score: 68, type: "攻擊", originOrder: 8 },
+                    { name: "⚔️ 攻擊-正手挑球", score: 65, type: "攻擊", originOrder: 9 },
+                    { name: "⚔️ 攻擊-正手切球劈長", score: 60, type: "攻擊", originOrder: 10 },
+                    { name: "⚔️ 攻擊-正手撇直線長球", score: 50, type: "攻擊", originOrder: 11 },
+                    { name: "⚔️ 攻擊-反手平拉", score: 70, type: "攻擊", originOrder: 12 },
+                    { name: "⚔️ 攻擊-反手下旋拉", score: 68, type: "攻擊", originOrder: 13 },
+                    { name: "⚔️ 攻擊-反手殺球(高球平球)", score: 70, type: "攻擊", originOrder: 14 },
+                    { name: "⚔️ 攻擊-反手殺球(一般高度平球)", score: 73, type: "攻擊", originOrder: 15 },
+                    { name: "⚔️ 攻擊-反手殺球(高球下旋)", score: 69, type: "攻擊", originOrder: 16 },
+                    { name: "⚔️ 攻擊-反手挑球", score: 60, type: "攻擊", originOrder: 17 },
+                    { name: "⚔️ 攻擊-反手切球劈長", score: 65, type: "攻擊", originOrder: 18 },
+                    { name: "⚔️ 攻擊-反手擰球", score: 40, type: "攻擊", originOrder: 19 },
 
-                    { name: "☯️ 防守-正手切球擺短", score: 55, type: "防守", originOrder: 20 },
-                    { name: "☯️ 防守-正手擋拉球(一般高度)", score: 55, type: "防守", originOrder: 21 },
-                    { name: "☯️ 防守-正手擋拉球(半高)", score: 55, type: "防守", originOrder: 22 },
-                    { name: "☯️ 防守-正手擋殺球", score: 55, type: "防守", originOrder: 23 },
-                    { name: "☯️ 防守-反手擋拉球(一般高度)", score: 55, type: "防守", originOrder: 24 },
-                    { name: "☯️ 防守-反手切球擺短", score: 55, type: "防守", originOrder: 25 },
-                    { name: "☯️ 防守-反手擋拉球(半高)", score: 55, type: "防守", originOrder: 26 },
-                    { name: "☯️ 防守-反手擋殺球", score: 55, type: "防守", originOrder: 27 },
-                    { name: "☯️ 防守-反手側切", score: 55, type: "防守", originOrder: 28 },
+                    { name: "☯️ 防守-正手切球擺短", score: 60, type: "防守", originOrder: 20 },
+                    { name: "☯️ 防守-正手擋拉球(一般高度)", score: 71, type: "防守", originOrder: 21 },
+                    { name: "☯️ 防守-正手擋拉球(半高)", score: 65, type: "防守", originOrder: 22 },
+                    { name: "☯️ 防守-正手擋殺球", score: 67, type: "防守", originOrder: 23 },
+                    { name: "☯️ 防守-反手切球擺短", score: 63, type: "防守", originOrder: 24 },
+                    { name: "☯️ 防守-反手擋拉球(一般高度)", score: 83, type: "防守", originOrder: 25 },
+                    { name: "☯️ 防守-反手擋拉球(半高)", score: 70, type: "防守", originOrder: 26 },
+                    { name: "☯️ 防守-反手擋殺球", score: 72, type: "防守", originOrder: 27 },
+                    { name: "☯️ 防守-反手側切", score: 38, type: "防守", originOrder: 28 },
 
-                    { name: "👟 腳步-固定兩點(正反)", score: 55, type: "腳步", originOrder: 29 },
-                    { name: "👟 腳步-固定三點(正反側身)", score: 55, type: "腳步", originOrder: 30 },
-                    { name: "👟 腳步-不定點(正反)", score: 55, type: "腳步", originOrder: 31 },
-                    { name: "👟 腳步-不定點(全台)", score: 55, type: "腳步", originOrder: 32 },
+                    { name: "👟 腳步-固定兩點(正反)", score: 70, type: "腳步", originOrder: 29 },
+                    { name: "👟 腳步-固定三點(正反側身)", score: 66, type: "腳步", originOrder: 30 },
+                    { name: "👟 腳步-不定點(正反)", score: 70, type: "腳步", originOrder: 31 },
+                    { name: "👟 腳步-不定點(全台)", score: 62, type: "腳步", originOrder: 32 },
 
-                    { name: "🧩 銜接-正手位接球(長球->殺球或拉球，短球->切球)", score: 55, type: "銜接", originOrder: 33 },
-                    { name: "🧩 銜接-反手位接球(長球->殺球或拉球，短球->切球)", score: 55, type: "銜接", originOrder: 34 },
+                    { name: "🧩 銜接-正手位接球(長球->殺球或拉球，短球->切球)", score: 62, type: "銜接", originOrder: 33 },
+                    { name: "🧩 銜接-反手位接球(長球->殺球或拉球，短球->切球)", score: 62, type: "銜接", originOrder: 34 },
 
-                    { name: "▶️ 發球-發左旋/右旋+上旋/下旋+長球/短球+短空+快速球", score: 55, type: "發球", originOrder: 35 },
+                    { name: "▶️ 發球-發左旋/右旋+上旋/下旋+長球/短球+短空+快速球", score: 61, type: "發球", originOrder: 35 },
 
-                    { name: "🔍 接球-接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球", score: 55, type: "接球", originOrder: 36 },
+                    { name: "🔍 接球-接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球", score: 65, type: "接球", originOrder: 36 },
 
-                    { name: "🥋 策略-發短空->殺球", score: 55, type: "策略", originOrder: 37 }
+                    { name: "🥋 策略-發短空->殺球", score: 70, type: "策略", originOrder: 37 }
                 ];
                 window.localStorage.setItem("dataList", JSON.stringify(dataList));
             } else {
@@ -391,13 +400,13 @@
 
         function getProgressBarClassName(score) {
             var classNameForStyle = "";
-            if (score <= 25) {
+            if (score < 60) {
                 classNameForStyle = "score1";
             }
-            else if (score <= 50) {
+            else if (score < 70) {
                 classNameForStyle = "score2";
             }
-            else if (score <= 75) {
+            else if (score < 80) {
                 classNameForStyle = "score3";
             }
             else if (score <= 100) {

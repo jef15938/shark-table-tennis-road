@@ -30,19 +30,23 @@
         }
 
         .container {
-            padding: 30px;
+            padding: 20px;
+        }
+
+        .main {
+            margin-top: 40px;
         }
 
         .progress-container {
             width: 100%;
-            height: 20px;
+            height: 16px;
             background-color: #ccc;
             border-radius: 15px;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .item+.item {
-            margin-top: 12px;
+            margin-top: 10px;
         }
 
         .progress-bar {
@@ -94,18 +98,26 @@
             top: 0px;
             font-size: 16px;
             font-weight: bold;
-            line-height: 20px;
+            line-height: 16px;
             content: attr(data-score)"%";
 
         }
 
         .item__title {
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .select-container {
             display: flex;
             justify-content: flex-end;
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            width: 100%;
+            background: #ffffffcc;
+            padding-top: 20px;
+            padding-right: 20px;
+            z-index: 1;
         }
 
         .view-select {
@@ -221,10 +233,46 @@
                     { name: "🌱 基礎-正手切球", score: 35, originOrder: 1 },
                     { name: "🌱 基礎-反手對打", score: 75, originOrder: 2 },
                     { name: "🌱 基礎-反手切球", score: 20, originOrder: 3 },
+
                     { name: "⚔️ 攻擊-正手平拉", score: 35, originOrder: 4 },
-                    { name: "⚔️ 攻擊-正手平拉", score: 55, originOrder: 5 },
-                    { name: "👟 腳步&銜接-正手位接球(長球->殺球或拉球，短球->切球)", score: 55, originOrder: 6 },
-                    { name: "🔍 接球-接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球", score: 55, originOrder: 7 }
+                    { name: "⚔️ 攻擊-正手下旋拉", score: 55, originOrder: 5 },
+                    { name: "⚔️ 攻擊-正手殺球(高球平球)", score: 55, originOrder: 6 },
+                    { name: "⚔️ 攻擊-正手殺球(一般高度平球)", score: 55, originOrder: 7 },
+                    { name: "⚔️ 攻擊-正手殺球(高球下旋)", score: 55, originOrder: 8 },
+                    { name: "⚔️ 攻擊-正手挑球", score: 55, originOrder: 9 },
+                    { name: "⚔️ 攻擊-正手切球劈長", score: 55, originOrder: 10 },
+                    { name: "⚔️ 攻擊-正手撇直線長球", score: 55, originOrder: 11 },
+                    { name: "⚔️ 攻擊-反手平拉", score: 35, originOrder: 12 },
+                    { name: "⚔️ 攻擊-反手下旋拉", score: 55, originOrder: 13 },
+                    { name: "⚔️ 攻擊-反手殺球(高球平球)", score: 55, originOrder: 14 },
+                    { name: "⚔️ 攻擊-反手殺球(一般高度平球)", score: 55, originOrder: 15 },
+                    { name: "⚔️ 攻擊-反手殺球(高球下旋)", score: 55, originOrder: 16 },
+                    { name: "⚔️ 攻擊-反手挑球", score: 55, originOrder: 17 },
+                    { name: "⚔️ 攻擊-反手切球劈長", score: 55, originOrder: 18 },
+                    { name: "⚔️ 攻擊-反手擰球", score: 55, originOrder: 19 },
+
+                    { name: "🛡️ 防守-正手切球擺短", score: 55, originOrder: 20 },
+                    { name: "🛡️ 防守-正手擋拉球(一般高度)", score: 55, originOrder: 21 },
+                    { name: "🛡️ 防守-正手擋拉球(半高)", score: 55, originOrder: 22 },
+                    { name: "🛡️ 防守-正手擋殺球", score: 55, originOrder: 23 },
+                    { name: "🛡️ 防守-反手擋拉球(一般高度)", score: 55, originOrder: 24 },
+                    { name: "🛡️ 防守-反手切球擺短", score: 55, originOrder: 25 },
+                    { name: "🛡️ 防守-反手擋拉球(半高)", score: 55, originOrder: 26 },
+                    { name: "🛡️ 防守-反手擋殺球", score: 55, originOrder: 27 },
+                    { name: "🛡️ 防守-反手側切", score: 55, originOrder: 28 },
+
+                    { name: "👟 腳步&銜接-固定兩點(正反)", score: 55, originOrder: 29 },
+                    { name: "👟 腳步&銜接-固定三點(正反側身)", score: 55, originOrder: 30 },
+                    { name: "👟 腳步&銜接-不定點(正反)", score: 55, originOrder: 31 },
+                    { name: "👟 腳步&銜接-不定點(全台)", score: 55, originOrder: 32 },
+                    { name: "👟 腳步&銜接-正手位接球(長球->殺球或拉球，短球->切球)", score: 55, originOrder: 33 },
+                    { name: "👟 腳步&銜接-反手位接球(長球->殺球或拉球，短球->切球)", score: 55, originOrder: 34 },
+
+                    { name: "▶️ 發球-發左旋/右旋+上旋/下旋+長球/短球+短空+快速球", score: 55, originOrder: 35 },
+
+                    { name: "🔍 接球-接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球", score: 55, originOrder: 36 },
+
+                    { name: "🥋 建立自己的策略-發短空->殺球", score: 55, originOrder: 37 }
                 ];
                 window.localStorage.setItem("dataList", JSON.stringify(dataList));
             } else {

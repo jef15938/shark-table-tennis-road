@@ -287,13 +287,11 @@
 
 
         document.getElementById("type-select").addEventListener("change", function () {
-            console.log(this.value);
             typeSelectValue = this.value;
             renderDataByCondition(typeSelectValue, viewSelectValue, dataList);
         });
 
         document.getElementById("view-select").addEventListener("change", function () {
-            console.log(this.value);
             viewSelectValue = this.value;
             renderDataByCondition(typeSelectValue, viewSelectValue, dataList);
         });
@@ -392,10 +390,8 @@
 
         // 匯入檔案
         $("[name=import-file]").on('change', (event) => {
-            console.log("change");
-            const selectedFile = event.target.files[0]; // Get the first selected file
 
-            console.log(event.target.files[0]);
+            const selectedFile = event.target.files[0]; // Get the first selected file
 
             if (selectedFile) {
                 const reader = new FileReader();

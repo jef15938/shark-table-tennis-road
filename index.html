@@ -152,7 +152,7 @@
             border: 1px solid;
             box-sizing: border-box;
             border-top: none;
-            padding: 3px
+            padding: 3px;
         }
 
         .total-item__name {
@@ -163,22 +163,37 @@
             font-weight: bolder;
         }
 
-        [name=import-file] {
-            display: none;
+        .file-container {
             position: fixed;
+            display: none;
+            align-items: center;
             z-index: 2;
-            top: 15px;
-            left: 0;
-            width: 100%;
-            height: 30px;
+            top: 10px;
+            left: 10px;
+            width: calc(100% - 20px);
             background: white;
-            opacity: 0;
-            pointer-events: none;
+            padding: 15px;
+            font-size: 16px;
+            box-sizing: border-box;
+            border: 2px solid black;
+        }
+
+        .close {
+            position: absolute;
+            right: 10px;
+            content: "X";
+            font-size: 20px;
+            font-weight: bolder;
+            cursor: pointer;
+            padding: 10px;
         }
     </style>
 
     <div class="container">
-        <input type="file" name="import-file" accept=".txt">
+        <div class="file-container">
+            <input type="file" name="import-file" accept=".txt">
+            <div class="close">X</div>
+        </div>
         <div class="select-container">
             <select name="類別" id="type-select" style="margin-right: 16px;">
                 <option value="全部" selected>全部</option>
@@ -330,7 +345,7 @@
             }, 50);
         }
 
-        // 使用禮物 action
+        // 修改分數
         $(".main").on("taphold", ".progress-container", function (event) {
 
             var target = $(event.currentTarget);
@@ -351,6 +366,7 @@
             }
         });
 
+        // 匯入還匯出
         $('.select-container').on('taphold', function () {
             // const currentTime = new Date().toLocaleString();
             // window.location.href = "mailto:jef15938@gmail.com?subject=鯊宜的桌球之路備份(" + currentTime + ")&body=" + '[{"name":"🌱 基礎-正手切球","score":73,"type":"基礎","id":"basci-2","originOrder":1},{"name":"🌱 基礎-反手對打","score":79,"type":"基礎","id":"basci-3","originOrder":2},{"name":"🌱 基礎-反手切球","score":71,"type":"基礎","id":"basci-4","originOrder":3},{"name":"⚔️ 攻擊-正手平拉","score":80,"type":"攻擊","id":"attack-1","originOrder":4},{"name":"⚔️ 攻擊-正手下旋拉","score":72,"type":"攻擊","id":"attack-2","originOrder":5},{"name":"⚔️ 攻擊-正手殺球(高球平球)","score":71,"type":"攻擊","id":"attack-3","originOrder":6},{"name":"⚔️ 攻擊-正手殺球(一般高度平球)","score":78,"type":"攻擊","id":"attack-4","originOrder":7},{"name":"⚔️ 攻擊-正手殺球(高球下旋)","score":68,"type":"攻擊","id":"attack-5","originOrder":8},{"name":"⚔️ 攻擊-正手挑球","score":65,"type":"攻擊","id":"attack-6","originOrder":9},{"name":"⚔️ 攻擊-正手切球劈長","score":60,"type":"攻擊","id":"attack-7","originOrder":10},{"name":"⚔️ 攻擊-正手撇直線長球","score":50,"type":"攻擊","id":"attack-8","originOrder":11},{"name":"⚔️ 攻擊-反手平拉","score":70,"type":"攻擊","id":"attack-9","originOrder":12},{"name":"⚔️ 攻擊-反手下旋拉","score":68,"type":"攻擊","id":"attack-10","originOrder":13},{"name":"⚔️ 攻擊-反手殺球(高球平球)","score":70,"type":"攻擊","id":"attack-11","originOrder":14},{"name":"⚔️ 攻擊-反手殺球(一般高度平球)","score":73,"type":"攻擊","id":"attack-12","originOrder":15},{"name":"⚔️ 攻擊-反手殺球(高球下旋)","score":69,"type":"攻擊","id":"attack-13","originOrder":16},{"name":"⚔️ 攻擊-反手挑球","score":60,"type":"攻擊","id":"attack-14","originOrder":17},{"name":"⚔️ 攻擊-反手切球劈長","score":65,"type":"攻擊","id":"attack-15","originOrder":18},{"name":"⚔️ 攻擊-反手擰球","score":40,"type":"攻擊","id":"attack-16","originOrder":19},{"name":"☯️ 防守-正手切球擺短","score":60,"type":"防守","id":"defend-1","originOrder":20},{"name":"☯️ 防守-正手擋拉球(一般高度)","score":71,"type":"防守","id":"defend-2","originOrder":21},{"name":"☯️ 防守-正手擋拉球(半高)","score":65,"type":"防守","id":"defend-3","originOrder":22},{"name":"☯️ 防守-正手擋殺球","score":67,"type":"防守","id":"defend-4","originOrder":23},{"name":"☯️ 防守-反手切球擺短","score":63,"type":"防守","id":"defend-5","originOrder":24},{"name":"☯️ 防守-反手擋拉球(一般高度)","score":83,"type":"防守","id":"defend-6","originOrder":25},{"name":"☯️ 防守-反手擋拉球(半高)","score":74,"type":"防守","id":"defend-7","originOrder":26},{"name":"☯️ 防守-反手擋殺球","score":72,"type":"防守","id":"defend-8","originOrder":27},{"name":"☯️ 防守-反手側切","score":38,"type":"防守","id":"defend-9","originOrder":28},{"name":"👟 腳步-固定兩點(正反)","score":75,"type":"腳步","id":"step-1","originOrder":29},{"name":"👟 腳步-固定三點(正反側身)","score":66,"type":"腳步","id":"step-2","originOrder":30},{"name":"👟 腳步-不定點(正反)","score":70,"type":"腳步","id":"step-3","originOrder":31},{"name":"👟 腳步-不定點(全台)","score":64,"type":"腳步","id":"step-4","originOrder":32},{"name":"🧩 銜接-正手位接球(長球->殺球或拉球，短球->切球)","score":62,"type":"銜接","id":"connect-1","originOrder":33},{"name":"🧩 銜接-反手位接球(長球->殺球或拉球，短球->切球)","score":62,"type":"銜接","id":"connect-2","originOrder":34},{"name":"▶️ 發球-發左旋/右旋+上旋/下旋+長球/短球+短空+快速球","score":61,"type":"發球","id":"start-1","originOrder":35},{"name":"🔍 接球-接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球","score":65,"type":"接球","id":"catch-1","originOrder":36},{"name":"🥋 策略-發短空->殺球","score":"99","type":"策略","id":"strategy-1","originOrder":37}';
@@ -370,12 +386,11 @@
                 URL.revokeObjectURL(url);
             }
             else if ("匯入" === func) {
-                $("[name=import-file]").show();
-                $("[name=import-file]").focus();
+                $(".file-container").css("display", "flex");
             }
         });
 
-
+        // 匯入檔案
         $("[name=import-file]").on('change', (event) => {
             console.log("change");
             const selectedFile = event.target.files[0]; // Get the first selected file
@@ -403,6 +418,9 @@
             }
         });
 
+        $(".container").on("click", ".close", () => {
+            $(".file-container").fadeOut()
+        });
         function getDataList() {
             var dataList = window.localStorage.getItem("dataList");
             if (dataList === null) {

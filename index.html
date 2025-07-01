@@ -379,7 +379,7 @@
 
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = "鯊宜的桌球之路備份(" + new Date().toLocaleString() + ").txt"; // Desired filename
+                a.download = new Date().toLocaleString() + "_鯊宜的桌球之路備份.txt"; // Desired filename
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);

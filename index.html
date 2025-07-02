@@ -258,6 +258,10 @@
     </div>
 
     <script>
+        const exportMainKeyWordStart = "===主要資料start===";
+        const exportMainKeyWordEnd = "===主要資料end===";
+        const exportHistoryKeyWordStart = "===歷史資料start===";
+        const exportHistoryKeyWordEnd = "===歷史資料end===";
         var typeSelectValue = "全部";
         var viewSelectValue = "預設";
         var dataList = getDataList() ?? [];
@@ -351,6 +355,11 @@
             var id = targetProgressBar.attr("id");
             var score = window.prompt("請輸入分數", targetProgressBar.attr("data-score"));
             if (score) {
+                // 歷程
+                const oldScore = Number(targetProgressBar.attr("data-score")); // 修改前的熟練度
+                recordSkillHistory(id, targetProgressBar.attr("data-name"), oldScore, Number(score)); // 記錄修改歷程
+                // end of 歷程
+
                 targetProgressBar.css("width", score + "%");
                 targetProgressBar.attr("data-score", score);
                 targetProgressBar.removeClass("score1 score2 score3 score4").addClass(getProgressBarClassName(score));
@@ -371,7 +380,11 @@
 
             var func = prompt("匯入還是匯出嗎?", "匯出");
             if ("匯出" === func) {
-                const blob = new Blob([JSON.stringify(getDataList())], { type: "text/plain" });
+
+                let exportContent = "";
+                exportContent += (exportMainKeyWordStart + window.localStorage.getItem("dataList") + exportMainKeyWordEnd); // 主要資料
+                exportContent += (exportHistoryKeyWordStart + window.localStorage.getItem('skillHistory') + exportHistoryKeyWordEnd); // 歷史資料
+                const blob = new Blob([exportContent], { type: "text/plain" });
 
                 const url = URL.createObjectURL(blob);
 
@@ -399,7 +412,12 @@
                 reader.onload = (e) => {
                     const fileContent = e.target.result; // The content of the file
                     if (fileContent && fileContent.length > 0) {
-                        window.localStorage.setItem("dataList", fileContent);
+                        const dataListStr = fileContent.slice(fileContent.indexOf(exportMainKeyWordStart) + exportMainKeyWordStart.length, fileContent.indexOf(exportMainKeyWordEnd));
+                        window.localStorage.setItem("dataList", dataListStr);
+
+                        const historyStr = fileContent.slice(fileContent.indexOf(exportHistoryKeyWordStart) + exportHistoryKeyWordStart.length, fileContent.indexOf(exportHistoryKeyWordEnd));
+                        window.localStorage.setItem("skillHistory", historyStr);
+
                         alert("匯入資料成功")
                         window.location.reload();
                     }
@@ -490,6 +508,24 @@
                 classNameForStyle = "score4";
             }
             return classNameForStyle;
+        }
+
+        function recordSkillHistory(skillId, skillName, oldScore, newScore) {
+            const history = JSON.parse(window.localStorage.getItem('skillHistory')) || {};
+            const timestamp = new Date().toISOString();
+
+            if (!history[skillId]) {
+                history[skillId] = { name: skillName, list: [] };
+            }
+
+            history[skillId].list.push({
+                name: skillName,
+                time: timestamp,
+                change: newScore - oldScore,
+                newScore: newScore,
+            });
+
+            localStorage.setItem('skillHistory', JSON.stringify(history));
         }
     </script>
 </body>

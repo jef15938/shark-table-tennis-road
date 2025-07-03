@@ -124,6 +124,7 @@
         .select-container {
             display: flex;
             justify-content: flex-end;
+            align-items: center;
             position: fixed;
             top: 0px;
             right: 0px;
@@ -133,7 +134,7 @@
             padding-bottom: 15px;
             padding-right: 20px;
             z-index: 1;
-            gap: 16px;
+            gap: 12px;
         }
 
         .grow-up-btn {
@@ -147,6 +148,7 @@
             white-space: nowrap;
             border-radius: 8px;
             cursor: pointer;
+            transform: translateY(-2px);
         }
 
         select {
@@ -654,7 +656,7 @@
             }
         });
 
-        $(".container").on("click", ".close", () => {
+        $(".file-container").on("click", ".close", () => {
             $(".file-container").fadeOut()
         });
 

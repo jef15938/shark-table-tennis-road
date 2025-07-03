@@ -33,6 +33,18 @@
             padding: 20px;
         }
 
+        #container-main {
+            display: none;
+            opacity: 0;
+            transition: opacity 500ms;
+        }
+
+        #container-main.open {
+            display: block;
+            opacity: 1;
+        }
+
+
         .main {
             margin-top: 40px;
             padding-top: 15px;
@@ -57,38 +69,39 @@
             width: 0%;
             transition: width 0.5s ease-in-out;
             background-size: 100% 100%;
+            color: white;
         }
 
-        .progress-bar.score1 {
-            background: #ff4d4f;
+        .score1-bg {
+            background: #ff4d4f !important;
         }
 
-        .progress-bar.score1::after {
-            color: #fff;
+        .score2-bg {
+            background: #faad14 !important;
         }
 
-        .progress-bar.score2 {
-            background: #faad14;
+        .score3-bg {
+            background: #40a9ff !important;
         }
 
-        .progress-bar.score2::after {
-            color: #fff;
+        .score4-bg {
+            background: #52c41a !important;
         }
 
-        .progress-bar.score3 {
-            background: #40a9ff;
+        .score1-text {
+            color: #ff4d4f !important;
         }
 
-        .progress-bar.score3::after {
-            color: #fff;
+        .score2-text {
+            color: #faad14 !important;
         }
 
-        .progress-bar.score4 {
-            background: #52c41a;
+        .score3-text {
+            color: #40a9ff !important;
         }
 
-        .progress-bar.score4::after {
-            color: #fff;
+        .score4-text {
+            color: #52c41a !important;
         }
 
         .progress-bar::after {
@@ -120,6 +133,20 @@
             padding-bottom: 15px;
             padding-right: 20px;
             z-index: 1;
+            gap: 16px;
+        }
+
+        .grow-up-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0072c4;
+            color: white;
+            text-align: center;
+            padding: 6px 12px;
+            white-space: nowrap;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
         select {
@@ -167,7 +194,7 @@
             position: fixed;
             display: none;
             align-items: center;
-            z-index: 2;
+            z-index: 50;
             top: 10px;
             left: 10px;
             width: calc(100% - 20px);
@@ -187,15 +214,181 @@
             cursor: pointer;
             padding: 10px;
         }
+
+        /* 歷史 */
+        .history-main {
+            display: none;
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            z-index: 9;
+            background: white;
+            margin-top: 55px;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: left 500ms, opacity 2s;
+        }
+
+        .history-main.open {
+            display: block;
+            left: 0;
+            opacity: 1;
+        }
+
+        .close-history {
+            position: absolute;
+            left: 30px;
+            content: "X";
+            font-size: 20px;
+            font-weight: bolder;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .history-item__header {
+            position: relative;
+            padding: 6px;
+            border: 1px solid #666;
+            border-radius: 10px;
+        }
+
+        .history-item__header.open {
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+
+        .history-collapse-func {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 20px;
+            font-size: 20px;
+            font-weight: bolder;
+            margin-bottom: 16px;
+        }
+
+        .history-collapse-func--open,
+        .history-collapse-func--close {
+            position: relative;
+            width: 30px;
+            height: 30px;
+        }
+
+        .history-collapse-func--open::before,
+        .history-collapse-func--close::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            top: 13px;
+            background: black;
+        }
+
+        .history-collapse-func--open::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            left: 13px;
+            background: black;
+        }
+
+        .history-item__header[has-record]::before,
+        .history-item__header[has-record]::after {
+            position: absolute;
+            background: black;
+            content: "";
+            transition: transform .5s;
+
+        }
+
+        .history-item__header[has-record]::before {
+            width: 16px;
+            height: 2px;
+            right: 20px;
+            bottom: 27px;
+        }
+
+        .history-item__header[has-record]::after {
+            width: 2px;
+            height: 16px;
+            right: 27px;
+            bottom: 20px;
+        }
+
+        .history-item__header.open::before {
+            transform: rotate(360deg);
+        }
+
+        .history-item__header.open::after {
+            transform: rotate(270deg);
+        }
+
+        .history-item-header__info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .history-info-bar {
+            min-width: 80px;
+            border-radius: 10px;
+            padding: 3px;
+            text-align: center;
+            font-weight: bolder;
+            color: white;
+            font-size: 18px;
+        }
+
+        .history-info-bar--diff {
+            min-width: 30px;
+            font-size: 22px;
+        }
+
+        .history-item__content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start;
+            transform: translateY(-1px);
+            border: 1px solid #666;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            padding: 10px;
+            background: #ddd;
+        }
+
+        .history-record-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-basis: calc(50% - 5px);
+            background: white;
+            border-radius: 10px;
+        }
+
+
+        .record-item__info-bar {
+            min-width: 50px;
+            border-radius: 10px;
+            padding: 3px;
+            text-align: center;
+            font-weight: bolder;
+        }
+
+        .history-item+.history-item {
+            margin-top: 10px;
+        }
     </style>
 
-    <div class="container">
-        <div class="file-container">
-            <input type="file" name="import-file" accept=".txt">
-            <div class="close">X</div>
-        </div>
-        <div class="select-container">
-            <select name="類別" id="type-select" style="margin-right: 16px;">
+    <div class="container open" id="container-main">
+        <div class="select-container" id="main-select-container">
+            <div class="grow-up-btn">成長之路</div>
+            <select name="類別" id="type-select">
                 <option value="全部" selected>全部</option>
                 <option value="基礎">🌱 基礎</option>
                 <option value="攻擊">⚔️ 攻擊</option>
@@ -209,8 +402,8 @@
 
             <select name="顯示模式" id="view-select">
                 <option value="預設" selected>預設</option>
-                <option value="熟練度由低到高">熟練度 由低到高</option>
                 <option value="熟練度由高到低">熟練度 由高到低</option>
+                <option value="熟練度由低到高">熟練度 由低到高</option>
             </select>
         </div>
 
@@ -257,6 +450,37 @@
         </div>
     </div>
 
+    <div class="history-main" id="history-main">
+        <div class="select-container" id="history-select-container">
+            <div class="close-history">X</div>
+            <select name="歷史-類別" id="history-type-select" style="margin-right: 16px;">
+                <option value="全部">全部</option>
+                <option value="有變動" selected>有變動</option>
+                <option value="無變動">無變動</option>
+            </select>
+
+            <select name="歷史-顯示模式" id="history-view-select">
+                <option value="預設">預設</option>
+                <option value="變動幅度由高到低" selected>變動幅度 由高到低</option>
+                <option value="變動幅度由低到高">變動幅度 由低到高</option>
+            </select>
+        </div>
+
+        <div class="history-collapse-func">
+            <div class="history-collapse-func--open"></div>
+            <div class="history-collapse-func--close"></div>
+        </div>
+
+        <div class="history-list" id="history-list">
+
+        </div>
+    </div>
+
+    <div class="file-container">
+        <input type="file" name="import-file" accept=".txt">
+        <div class="close">X</div>
+    </div>
+
     <script>
         const exportMainKeyWordStart = "===主要資料start===";
         const exportMainKeyWordEnd = "===主要資料end===";
@@ -265,7 +489,6 @@
         var typeSelectValue = "全部";
         var viewSelectValue = "預設";
         var dataList = getDataList() ?? [];
-        dataList = [...dataList].sort((a, b) => a.originOrder - b.originOrder)
 
         // var dataList = [
         //     { id: "d1", name: '123', score: 20 },
@@ -310,10 +533,10 @@
             if ("預設" === viewSelectValue) {
                 renderData(resultDataList);
             }
-            if ("熟練度由低到高" === viewSelectValue) {
+            else if ("熟練度由低到高" === viewSelectValue) {
                 renderData(resultDataList.sort((a, b) => a.score - b.score));
             }
-            if ("熟練度由高到低" === viewSelectValue) {
+            else if ("熟練度由高到低" === viewSelectValue) {
                 renderData(resultDataList.sort((a, b) => b.score - a.score));
             }
 
@@ -326,7 +549,7 @@
             main.innerHTML = "";
 
             dataList.forEach(data => {
-                var classNameForStyle = getProgressBarClassName(data.score);
+                var classNameForStyle = getProgressBarClassName(data.score, "bg");
                 var item = document.createElement("div");
                 item.className = "item";
                 item.innerHTML = `
@@ -355,14 +578,15 @@
             var id = targetProgressBar.attr("id");
             var score = window.prompt("請輸入分數", targetProgressBar.attr("data-score"));
             if (score) {
+
                 // 歷程
                 const oldScore = Number(targetProgressBar.attr("data-score")); // 修改前的熟練度
-                recordSkillHistory(id, targetProgressBar.attr("data-name"), oldScore, Number(score)); // 記錄修改歷程
+                recordSkillHistory(id, targetProgressBar.attr("data-name"), oldScore, score); // 記錄修改歷程
                 // end of 歷程
 
                 targetProgressBar.css("width", score + "%");
                 targetProgressBar.attr("data-score", score);
-                targetProgressBar.removeClass("score1 score2 score3 score4").addClass(getProgressBarClassName(score));
+                targetProgressBar.removeClass("score1-bg score2-bg score3-bg score4-bg").addClass(getProgressBarClassName(score, "bg"));
 
                 // 將資料塞回 localstorage
                 var targetData = { ...dataList.find(x => x.id === id), score: score };
@@ -373,10 +597,8 @@
             }
         });
 
-        // 匯入還匯出
-        $('.select-container').on('taphold', function () {
-            // const currentTime = new Date().toLocaleString();
-            // window.location.href = "mailto:jef15938@gmail.com?subject=鯊宜的桌球之路備份(" + currentTime + ")&body=" + '[{"name":"🌱 基礎-正手切球","score":73,"type":"基礎","id":"basci-2","originOrder":1},{"name":"🌱 基礎-反手對打","score":79,"type":"基礎","id":"basci-3","originOrder":2},{"name":"🌱 基礎-反手切球","score":71,"type":"基礎","id":"basci-4","originOrder":3},{"name":"⚔️ 攻擊-正手平拉","score":80,"type":"攻擊","id":"attack-1","originOrder":4},{"name":"⚔️ 攻擊-正手下旋拉","score":72,"type":"攻擊","id":"attack-2","originOrder":5},{"name":"⚔️ 攻擊-正手殺球(高球平球)","score":71,"type":"攻擊","id":"attack-3","originOrder":6},{"name":"⚔️ 攻擊-正手殺球(一般高度平球)","score":78,"type":"攻擊","id":"attack-4","originOrder":7},{"name":"⚔️ 攻擊-正手殺球(高球下旋)","score":68,"type":"攻擊","id":"attack-5","originOrder":8},{"name":"⚔️ 攻擊-正手挑球","score":65,"type":"攻擊","id":"attack-6","originOrder":9},{"name":"⚔️ 攻擊-正手切球劈長","score":60,"type":"攻擊","id":"attack-7","originOrder":10},{"name":"⚔️ 攻擊-正手撇直線長球","score":50,"type":"攻擊","id":"attack-8","originOrder":11},{"name":"⚔️ 攻擊-反手平拉","score":70,"type":"攻擊","id":"attack-9","originOrder":12},{"name":"⚔️ 攻擊-反手下旋拉","score":68,"type":"攻擊","id":"attack-10","originOrder":13},{"name":"⚔️ 攻擊-反手殺球(高球平球)","score":70,"type":"攻擊","id":"attack-11","originOrder":14},{"name":"⚔️ 攻擊-反手殺球(一般高度平球)","score":73,"type":"攻擊","id":"attack-12","originOrder":15},{"name":"⚔️ 攻擊-反手殺球(高球下旋)","score":69,"type":"攻擊","id":"attack-13","originOrder":16},{"name":"⚔️ 攻擊-反手挑球","score":60,"type":"攻擊","id":"attack-14","originOrder":17},{"name":"⚔️ 攻擊-反手切球劈長","score":65,"type":"攻擊","id":"attack-15","originOrder":18},{"name":"⚔️ 攻擊-反手擰球","score":40,"type":"攻擊","id":"attack-16","originOrder":19},{"name":"☯️ 防守-正手切球擺短","score":60,"type":"防守","id":"defend-1","originOrder":20},{"name":"☯️ 防守-正手擋拉球(一般高度)","score":71,"type":"防守","id":"defend-2","originOrder":21},{"name":"☯️ 防守-正手擋拉球(半高)","score":65,"type":"防守","id":"defend-3","originOrder":22},{"name":"☯️ 防守-正手擋殺球","score":67,"type":"防守","id":"defend-4","originOrder":23},{"name":"☯️ 防守-反手切球擺短","score":63,"type":"防守","id":"defend-5","originOrder":24},{"name":"☯️ 防守-反手擋拉球(一般高度)","score":83,"type":"防守","id":"defend-6","originOrder":25},{"name":"☯️ 防守-反手擋拉球(半高)","score":74,"type":"防守","id":"defend-7","originOrder":26},{"name":"☯️ 防守-反手擋殺球","score":72,"type":"防守","id":"defend-8","originOrder":27},{"name":"☯️ 防守-反手側切","score":38,"type":"防守","id":"defend-9","originOrder":28},{"name":"👟 腳步-固定兩點(正反)","score":75,"type":"腳步","id":"step-1","originOrder":29},{"name":"👟 腳步-固定三點(正反側身)","score":66,"type":"腳步","id":"step-2","originOrder":30},{"name":"👟 腳步-不定點(正反)","score":70,"type":"腳步","id":"step-3","originOrder":31},{"name":"👟 腳步-不定點(全台)","score":64,"type":"腳步","id":"step-4","originOrder":32},{"name":"🧩 銜接-正手位接球(長球->殺球或拉球，短球->切球)","score":62,"type":"銜接","id":"connect-1","originOrder":33},{"name":"🧩 銜接-反手位接球(長球->殺球或拉球，短球->切球)","score":62,"type":"銜接","id":"connect-2","originOrder":34},{"name":"▶️ 發球-發左旋/右旋+上旋/下旋+長球/短球+短空+快速球","score":61,"type":"發球","id":"start-1","originOrder":35},{"name":"🔍 接球-接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球","score":65,"type":"接球","id":"catch-1","originOrder":36},{"name":"🥋 策略-發短空->殺球","score":"99","type":"策略","id":"strategy-1","originOrder":37}';
+        // 匯入或匯出
+        $('#main-select-container,#history-select-container').on('taphold', function () {
 
             var func = prompt("匯入還是匯出嗎?", "匯出");
             if ("匯出" === func) {
@@ -435,14 +657,36 @@
         $(".container").on("click", ".close", () => {
             $(".file-container").fadeOut()
         });
+
+        // 開啟歷史
+        $(".grow-up-btn").on("click", function () {
+            initHistoryPage();
+            $("#history-main").show("fast", function () {
+                $("#history-main").addClass("open");
+                $("#container-main").hide();
+            });
+            $("#container-main").removeClass("open");
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
+        });
+
+        $(".history-main").on("click", ".close-history", () => {
+            $("#history-main").removeClass("open");
+            $("#container-main").show();
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
+            setTimeout(function () {
+                $("#history-main").hide();
+                $("#container-main").addClass("open");
+            }, 400);
+        });
+
         function getDataList() {
             var dataList = window.localStorage.getItem("dataList");
             if (dataList === null) {
                 dataList = [
-                    { name: "🌱 基礎 - 正手對打", score: 83, type: "基礎", id: "basci-1", originOrder: 0 },
-                    { name: "🌱 基礎 - 正手切球", score: 73, type: "基礎", id: "basci-2", originOrder: 1 },
-                    { name: "🌱 基礎 - 反手對打", score: 79, type: "基礎", id: "basci-3", originOrder: 2 },
-                    { name: "🌱 基礎 - 反手切球", score: 71, type: "基礎", id: "basci-4", originOrder: 3 },
+                    { name: "🌱 基礎 - 正手對打", score: 83, type: "基礎", id: "basic-1", originOrder: 0 },
+                    { name: "🌱 基礎 - 正手切球", score: 73, type: "基礎", id: "basic-2", originOrder: 1 },
+                    { name: "🌱 基礎 - 反手對打", score: 79, type: "基礎", id: "basic-3", originOrder: 2 },
+                    { name: "🌱 基礎 - 反手切球", score: 71, type: "基礎", id: "basic-4", originOrder: 3 },
 
                     { name: "⚔️ 攻擊 - 正手平拉", score: 80, type: "攻擊", id: "attack-1", originOrder: 4 },
                     { name: "⚔️ 攻擊 - 正手下旋拉", score: 72, type: "攻擊", id: "attack-2", originOrder: 5 },
@@ -490,10 +734,12 @@
                 dataList = JSON.parse(dataList);
             }
 
+            dataList = [...dataList].sort((a, b) => a.originOrder - b.originOrder);
+
             return dataList;
         }
 
-        function getProgressBarClassName(score) {
+        function getProgressBarClassName(score, type) {
             var classNameForStyle = "";
             if (score < 60) {
                 classNameForStyle = "score1";
@@ -507,8 +753,22 @@
             else if (score <= 100) {
                 classNameForStyle = "score4";
             }
+
+            if (type === "bg" && classNameForStyle) {
+                classNameForStyle += "-bg";
+            }
+            else if (type === "text" && classNameForStyle) {
+                classNameForStyle += "-text";
+            }
+
             return classNameForStyle;
         }
+
+        // 歷史區塊
+        let historyTypeSelectValue = "有變動";
+        let historyViewSelectValue = "變動幅度由高到低";
+
+        let historyData = {};
 
         function recordSkillHistory(skillId, skillName, oldScore, newScore) {
             const history = JSON.parse(window.localStorage.getItem('skillHistory')) || {};
@@ -527,6 +787,171 @@
 
             localStorage.setItem('skillHistory', JSON.stringify(history));
         }
+
+        function initHistoryPage() {
+            // $("#history-main").empty();
+            historyData = JSON.parse(window.localStorage.getItem('skillHistory')) ?? {};
+            renderHistoryByCondition(historyTypeSelectValue, historyViewSelectValue, historyData, dataList);
+            openAllRecord();
+            // $("[history-source-id]").addClass("open");
+        }
+
+        document.getElementById("history-type-select").addEventListener("change", function () {
+            historyTypeSelectValue = this.value;
+            renderHistoryByCondition(historyTypeSelectValue, historyViewSelectValue, historyData, dataList);
+        });
+
+        document.getElementById("history-view-select").addEventListener("change", function () {
+            historyViewSelectValue = this.value;
+            renderHistoryByCondition(historyTypeSelectValue, historyViewSelectValue, historyData, dataList);
+        });
+
+        function renderHistoryByCondition(historyTypeSelectValue, historyViewSelectValue, historyData, dataList) {
+            var resultDataList = [...dataList];
+
+            if ("有變動" === historyTypeSelectValue) {
+                resultDataList = resultDataList.filter(x => !!historyData[x.id]);
+            }
+            else if ("無變動" === historyTypeSelectValue) {
+                resultDataList = resultDataList.filter(x => !historyData[x.id]);
+            }
+
+            if ("預設" === historyViewSelectValue) {
+                renderHistory(historyData, resultDataList);
+            }
+            else {
+                resultDataList = resultDataList.map(x => {
+                    let diff = 0;
+                    if (!!historyData[x.id]) {
+                        console.log(historyData[x.id].list);
+                        diff = historyData[x.id].list
+                            .map(x => Number(x.change))
+                            .reduce((a, b) => a + b, 0);
+                    }
+                    return { ...x, diff: diff }
+                });
+
+                console.warn(resultDataList);
+                if ("變動幅度由低到高" === historyViewSelectValue) {
+                    renderHistory(historyData, resultDataList.sort((a, b) => a.diff - b.diff));
+                }
+                else if ("變動幅度由高到低" === historyViewSelectValue) {
+                    renderHistory(historyData, resultDataList.sort((a, b) => b.diff - a.diff));
+                }
+            }
+
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
+        }
+
+        function renderHistory(historyData, dataList) {
+            $("#history-list").empty();
+
+            dataList.forEach(data => {
+                console.log(data);
+
+                const targetRecord = historyData[data.id];
+
+                // 有紀錄
+                let diffTotal = 0;
+                let content = "";
+                if (targetRecord) {
+                    let recordList = targetRecord.list;
+                    recordList = [...recordList]
+                        .sort((a, b) => new Date(a.time) - new Date(b.time))
+                        .map(x => ({ ...x, time: new Date(x.time).toLocaleDateString() }));
+                    console.warn(recordList);
+
+                    content = $(`<div class="history-item__content" history-source-id="${data.id}">`);
+                    let recordListHtml = "";
+
+                    recordList.forEach(record => {
+                        diffTotal += Number(record.change);
+                        let recordItem = `
+                            <div class="history-record-item">
+                                <div class="record-item__text">${record.time}</div>
+                                <div class="record-item__info-bar score3-text">${record.change > 0 ? "+" : ""}${record.change}</div>
+                            </div>
+                        `;
+                        recordListHtml += recordItem;
+                    });
+
+                    content.append(recordListHtml);
+                }
+
+                var historyItem = $("<div class='history-item'>");
+                var historyItemHeader = `
+                    <div class="history-item__header" history-id="$historyID$" ${!!targetRecord ? "has-record" : ""}>
+                        <div class="item__title">$title$</div>
+                        <div class="history-item-header__info">
+                            <div class="history-info-bar history-info-bar--before $originScoreClass$">$originScore$</div>
+                            ${diffTotal !== 0 ?
+                        `       <div class="history-info-bar history-info-bar--diff $diffScoreClass$">$diffScore$</div>
+                                <div class="history-info-bar history-info-bar--after $currentScoreClass$">$currentScore$</div>`
+                        : ""
+                    }
+                        </div>
+                    </div>
+                `;
+
+                historyItemHeader = historyItemHeader
+                    .replace("$historyID$", data.id)
+                    .replace("$title$", data.name)
+
+                if (diffTotal === 0) {
+                    historyItemHeader = historyItemHeader
+                        .replace("$originScoreClass$", getProgressBarClassName(data.score, "bg"))
+                        .replace("$originScore$", data.score);
+                }
+                else {
+                    const originScore = data.score - diffTotal;
+                    historyItemHeader = historyItemHeader
+                        .replace("$originScoreClass$", getProgressBarClassName(originScore, "bg"))
+                        .replace("$originScore$", originScore)
+                        .replace("$diffScoreClass$", getProgressBarClassName(data.score, "text"))
+                        .replace("$diffScore$", diffTotal > 0 ? "+" + diffTotal : diffTotal)
+                        .replace("$currentScoreClass$", getProgressBarClassName(data.score, "bg"))
+                        .replace("$currentScore$", data.score);
+                }
+
+
+
+                // console.log(historyItemHeader);
+                historyItem.append(historyItemHeader);
+
+                if (targetRecord) {
+                    historyItem.append(content);
+                }
+
+                $("#history-list").append(historyItem);
+                $(".history-item__content").hide();
+            });
+        }
+
+        function openAllRecord() {
+            $("[history-id]:not(.open)").trigger("click");
+        }
+
+        function closeAllRecord() {
+            $("[history-id].open").trigger("click");
+        }
+
+        $(".history-main").on("click", ".history-item__header[history-id][has-record]", function (event) {
+            var currentTarget = $(event.currentTarget);
+            var historyID = currentTarget.attr("history-id");
+            if (historyID) {
+                var content = $("[history-source-id=" + historyID + "]");
+                currentTarget.toggleClass('open', !content.is(':visible'));
+                $("[history-source-id=" + historyID + "]").slideToggle();
+            }
+        });
+
+        $(".history-main").on("click", ".history-collapse-func--open", function (event) {
+            openAllRecord();
+        });
+
+        $(".history-main").on("click", ".history-collapse-func--close", function (event) {
+            closeAllRecord();
+        });
     </script>
 </body>
 

@@ -277,6 +277,7 @@
             position: relative;
             width: 30px;
             height: 30px;
+            transition: transform 0.5s;
         }
 
         .history-collapse-func--open::before,
@@ -956,11 +957,17 @@
             }
         });
 
+        let openFuncRotateDeg = 0;
+        let closeFuncRotateDeg = 0;
         $(".history-main").on("click", ".history-collapse-func--open", function (event) {
+            openFuncRotateDeg += 360;
+            $(".history-collapse-func--open").css("transform", "rotate(" + openFuncRotateDeg + "deg)");
             openAllRecord();
         });
 
         $(".history-main").on("click", ".history-collapse-func--close", function (event) {
+            closeFuncRotateDeg += 360;
+            $(".history-collapse-func--close").css("transform", "rotate(" + closeFuncRotateDeg + "deg)");
             closeAllRecord();
         });
     </script>

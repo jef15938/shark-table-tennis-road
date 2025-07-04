@@ -451,7 +451,7 @@
             </div>
             <div class="total__item" style="flex-basis: 100%;justify-content: center;" data-type="平均">
                 <div class="total-item__name" style="margin-right: 10px;">⚖️ 平均熟練度</div>
-                <div class="total-item__count"></div>
+                <div class="total-item__count"></div><span> %</span>
             </div>
         </div>
     </div>
@@ -490,6 +490,8 @@
     <script>
         const exportMainKeyWordStart = "===主要資料start===";
         const exportMainKeyWordEnd = "===主要資料end===";
+        const exportAvgKeyWordStart = "===原始平均熟練度start===";
+        const exportAvgKeyWordEnd = "===原始平均熟練度end===";
         const exportHistoryKeyWordStart = "===歷史資料start===";
         const exportHistoryKeyWordEnd = "===歷史資料end===";
         var typeSelectValue = "全部";
@@ -524,7 +526,6 @@
             const totalScore = dataList
                 .map(x => Number(x.score))
                 .reduce((a, b) => a + b, 0);
-            console.log(totalScore);
             return (Math.round(totalScore / dataList.length * 100) / 100);
         }
 
@@ -622,8 +623,10 @@
             if ("匯出" === func) {
 
                 let exportContent = "";
+                exportContent += (exportAvgKeyWordStart + window.localStorage.getItem('originTotalAvg') + exportAvgKeyWordEnd); // 原始熟練度平均資料
                 exportContent += (exportMainKeyWordStart + window.localStorage.getItem("dataList") + exportMainKeyWordEnd); // 主要資料
                 exportContent += (exportHistoryKeyWordStart + window.localStorage.getItem('skillHistory') + exportHistoryKeyWordEnd); // 歷史資料
+
                 const blob = new Blob([exportContent], { type: "text/plain" });
 
                 const url = URL.createObjectURL(blob);
@@ -652,6 +655,10 @@
                 reader.onload = (e) => {
                     const fileContent = e.target.result; // The content of the file
                     if (fileContent && fileContent.length > 0) {
+
+                        const originTotalAvgStr = fileContent.slice(fileContent.indexOf(exportAvgKeyWordStart) + exportAvgKeyWordStart.length, fileContent.indexOf(exportAvgKeyWordEnd));
+                        window.localStorage.setItem("originTotalAvg", originTotalAvgStr);
+
                         const dataListStr = fileContent.slice(fileContent.indexOf(exportMainKeyWordStart) + exportMainKeyWordStart.length, fileContent.indexOf(exportMainKeyWordEnd));
                         window.localStorage.setItem("dataList", dataListStr);
 
@@ -854,7 +861,6 @@
                 resultDataList = resultDataList.map(x => {
                     let diff = 0;
                     if (!!historyData[x.id]) {
-                        console.log(historyData[x.id].list);
                         diff = historyData[x.id].list
                             .map(x => Number(x.change))
                             .reduce((a, b) => a + b, 0);
@@ -862,7 +868,6 @@
                     return { ...x, diff: diff }
                 });
 
-                console.warn(resultDataList);
                 if ("變動幅度由低到高" === historyViewSelectValue) {
                     renderHistory(historyData, resultDataList.sort((a, b) => a.diff - b.diff));
                 }
@@ -873,13 +878,12 @@
 
             const originTotalAvg = Number(window.localStorage.getItem("originTotalAvg"));
             const currentTotalAvg = calculateTotalAvg(dataList);
-            console.log("currentTotalAvg end");
             let diffAvg = currentTotalAvg - originTotalAvg;
             diffAvg = (Math.round(diffAvg * 100) / 100);
             var totalItem = `
             <div class="history-item" style="border-top: 2px solid #666;padding-top: 15px;margin-top: 15px;">
-                <div class="history-item__header">
-                    <div class="item__title">平均熟練度</div>
+                <div class="history-item__header" style="border-width: 4px;">
+                    <div class="item__title">⚖️ 平均熟練度</div>
                     <div class="history-item-header__info">
                         <div class="history-info-bar history-info-bar--before $originScoreClass$">$originScore$</div>
                         ${diffAvg !== 0 ?
@@ -914,7 +918,6 @@
             $("#history-list").empty();
 
             dataList.forEach(data => {
-                console.log(data);
 
                 const targetRecord = historyData[data.id];
 
@@ -927,7 +930,6 @@
                     recordList = [...recordList]
                         .sort((a, b) => new Date(a.time) - new Date(b.time))
                         .map(x => ({ ...x, time: new Date(x.time).toLocaleDateString() }));
-                    console.warn(recordList);
 
                     content = $(`<div class="history-item__content" history-source-id="${data.id}">`);
                     let recordListHtml = "";
@@ -981,9 +983,6 @@
                         .replace("$currentScore$", data.score);
                 }
 
-
-
-                // console.log(historyItemHeader);
                 historyItem.append(historyItemHeader);
 
                 if (targetRecord) {

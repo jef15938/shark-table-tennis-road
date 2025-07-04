@@ -618,9 +618,9 @@
             var target = $(event.currentTarget);
             var targetProgressBar = target.find(".progress-bar[data-score]");
             var id = targetProgressBar.attr("id");
-            var score = Number(window.prompt("請輸入分數", targetProgressBar.attr("data-score")));
-            if (score) {
-
+            let score = window.prompt("請輸入分數", targetProgressBar.attr("data-score"));
+            if (score !== null) {
+                score = Number(score);
                 // 歷程
                 const oldScore = Number(targetProgressBar.attr("data-score")); // 修改前的熟練度
                 recordSkillHistory(id, targetProgressBar.attr("data-name"), oldScore, score); // 記錄修改歷程
@@ -646,9 +646,12 @@
             var target = $(event.currentTarget);
             var targetCount = target.find(".total-item__count");
             const oldTainScore = Number(targetCount.text()); // 修改前的 tain 積分
-            var newTainScore = Number(window.prompt("請輸入分數", oldTainScore));
-            recordSkillHistory("tain", "🦈 TAIN積分", oldTainScore, newTainScore); // 記錄修改歷程
-            $(".total__item[data-type=tain積分] > .total-item__count").text(newTainScore);
+            let newTainScore = window.prompt("請輸入分數", oldTainScore);
+            if(newTainScore !== null) {
+                newTainScore = Number(newTainScore);
+                recordSkillHistory("tain", "🦈 TAIN積分", oldTainScore, newTainScore); // 記錄修改歷程
+                $(".total__item[data-type=tain積分] > .total-item__count").text(newTainScore);
+            }
         });
 
         // 匯入或匯出

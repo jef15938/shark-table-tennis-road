@@ -184,9 +184,7 @@
             padding: 3px;
         }
 
-        .total-item__name {
-            flex-basis: 60px;
-        }
+        .total-item__name {}
 
         .total-item__count {
             font-weight: bolder;
@@ -416,7 +414,7 @@
 
         <div class="total">
             <div class="total__item" style="flex-basis: 100%;justify-content: center;" data-type="全部">
-                <div class="total-item__name">🏓 全部</div>
+                <div class="total-item__name" style="margin-right: 10px;">🏓 全部</div>
                 <div class="total-item__count"></div>
             </div>
             <div class="total__item" data-type="基礎">
@@ -449,6 +447,10 @@
             </div>
             <div class="total__item" data-type="策略">
                 <div class="total-item__name">🥋 策略</div>
+                <div class="total-item__count"></div>
+            </div>
+            <div class="total__item" style="flex-basis: 100%;justify-content: center;" data-type="平均">
+                <div class="total-item__name" style="margin-right: 10px;">⚖️ 平均熟練度</div>
                 <div class="total-item__count"></div>
             </div>
         </div>
@@ -515,6 +517,16 @@
                 countElement.text(dataList.filter(x => x.type === dataType).length);
             }
         });
+        const totalAvg = calculateTotalAvg(dataList);
+        $(".total__item[data-type=平均] > .total-item__count").text(totalAvg);
+
+        function calculateTotalAvg(dataList) {
+            const totalScore = dataList
+                .map(x => Number(x.score))
+                .reduce((a, b) => a + b, 0);
+            console.log(totalScore);
+            return (Math.round(totalScore / dataList.length * 100) / 100);
+        }
 
 
         document.getElementById("type-select").addEventListener("change", function () {
@@ -598,6 +610,8 @@
 
                 window.localStorage.setItem("dataList", JSON.stringify(resultDataList));
                 dataList = getDataList() ?? [];
+                const totalAvg = calculateTotalAvg(dataList);
+                $(".total__item[data-type=平均] > .total-item__count").text(totalAvg);
             }
         });
 
@@ -727,12 +741,25 @@
                     { name: "🧩 銜接 - 正手位接球(長球->殺球或拉球，短球->切球)", score: 62, type: "銜接", id: "connect-1", originOrder: 33 },
                     { name: "🧩 銜接 - 反手位接球(長球->殺球或拉球，短球->切球)", score: 62, type: "銜接", id: "connect-2", originOrder: 34 },
 
-                    { name: "▶️ 發球 - 發左旋/右旋+上旋/下旋+長球/短球+短空+快速球", score: 61, type: "發球", id: "start-1", originOrder: 35 },
+                    { name: "▶️ 發球 - 發左上旋長球/短球", score: 65, type: "發球", id: "start-1", originOrder: 35 },
+                    { name: "▶️ 發球 - 發左下旋長球/短球", score: 65, type: "發球", id: "start-2", originOrder: 36 },
+                    { name: "▶️ 發球 - 發右上旋長球/短球", score: 70, type: "發球", id: "start-3", originOrder: 37 },
+                    { name: "▶️ 發球 - 發右下旋長球/短球", score: 72, type: "發球", id: "start-4", originOrder: 38 },
+                    { name: "▶️ 發球 - 發短空", score: 70, type: "發球", id: "start-5", originOrder: 39 },
+                    { name: "▶️ 發球 - 發快速球", score: 66, type: "發球", id: "start-6", originOrder: 40 },
 
-                    { name: "🔍 接球 - 接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球", score: 65, type: "接球", id: "catch-1", originOrder: 36 },
+                    // { name: "🔍 接球 - 接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球", score: 65, type: "接球", id: "catch-1", originOrder: 41 },
+                    { name: "🔍 接球 - 接左上旋長球/短球", score: 68, type: "接球", id: "catch-1", originOrder: 41 },
+                    { name: "🔍 接球 - 接左下旋長球/短球", score: 71, type: "接球", id: "catch-2", originOrder: 42 },
+                    { name: "🔍 接球 - 接右上旋長球/短球", score: 66, type: "接球", id: "catch-3", originOrder: 43 },
+                    { name: "🔍 接球 - 接右下旋長球/短球", score: 69, type: "接球", id: "catch-4", originOrder: 44 },
+                    { name: "🔍 接球 - 接短空", score: 70, type: "接球", id: "catch-5", originOrder: 45 },
+                    { name: "🔍 接球 - 接快速球", score: 65, type: "接球", id: "catch-6", originOrder: 46 },
 
-                    { name: "🥋 策略 - 發短空->殺球", score: 70, type: "策略", id: "strategy-1", originOrder: 37 }
+                    { name: "🥋 策略 - 發短空->殺球", score: 70, type: "策略", id: "strategy-1", originOrder: 47 }
                 ];
+                const toalAvg = calculateTotalAvg(dataList);
+                window.localStorage.setItem("originTotalAvg", toalAvg);
                 window.localStorage.setItem("dataList", JSON.stringify(dataList));
             } else {
                 dataList = JSON.parse(dataList);
@@ -843,6 +870,42 @@
                     renderHistory(historyData, resultDataList.sort((a, b) => b.diff - a.diff));
                 }
             }
+
+            const originTotalAvg = Number(window.localStorage.getItem("originTotalAvg"));
+            const currentTotalAvg = calculateTotalAvg(dataList);
+            console.log("currentTotalAvg end");
+            let diffAvg = currentTotalAvg - originTotalAvg;
+            diffAvg = (Math.round(diffAvg * 100) / 100);
+            var totalItem = `
+            <div class="history-item" style="border-top: 2px solid #666;padding-top: 15px;margin-top: 15px;">
+                <div class="history-item__header">
+                    <div class="item__title">平均熟練度</div>
+                    <div class="history-item-header__info">
+                        <div class="history-info-bar history-info-bar--before $originScoreClass$">$originScore$</div>
+                        ${diffAvg !== 0 ?
+                    `       <div class="history-info-bar history-info-bar--diff $diffScoreClass$">$diffScore$</div>
+                            <div class="history-info-bar history-info-bar--after $currentScoreClass$">$currentScore$</div>`
+                    : ""
+                }
+                    </div>
+                </div>
+            </div>
+            `;
+            if (diffAvg === 0) {
+                totalItem = totalItem
+                    .replace("$originScoreClass$", getProgressBarClassName(currentTotalAvg, "bg"))
+                    .replace("$originScore$", currentTotalAvg);
+            }
+            else {
+                totalItem = totalItem
+                    .replace("$originScoreClass$", getProgressBarClassName(originTotalAvg, "bg"))
+                    .replace("$originScore$", originTotalAvg)
+                    .replace("$diffScoreClass$", getProgressBarClassName(currentTotalAvg, "text"))
+                    .replace("$diffScore$", diffAvg > 0 ? "+" + diffAvg : diffAvg)
+                    .replace("$currentScoreClass$", getProgressBarClassName(currentTotalAvg, "bg"))
+                    .replace("$currentScore$", currentTotalAvg);
+            }
+            $("#history-list").append(totalItem);
 
             $('html, body').animate({ scrollTop: 0 }, 'fast');
         }

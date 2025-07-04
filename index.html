@@ -252,13 +252,14 @@
         .history-item__header {
             position: relative;
             padding: 6px;
-            border: 1px solid #666;
+            border: 3px solid #666;
             border-radius: 10px;
         }
 
         .history-item__header.open {
             border-bottom-left-radius: 0px;
             border-bottom-right-radius: 0px;
+            border-bottom: none;
         }
 
         .history-collapse-func {
@@ -355,12 +356,12 @@
             flex-wrap: wrap;
             gap: 10px;
             justify-content: flex-start;
-            transform: translateY(-1px);
-            border: 1px solid #666;
+            border: 3px solid #666;
             border-bottom-left-radius: 10px;
             border-bottom-right-radius: 10px;
             padding: 10px;
             background: #ddd;
+            border-top: none;
         }
 
         .history-record-item {
@@ -854,6 +855,7 @@
                 const targetRecord = historyData[data.id];
 
                 // 有紀錄
+                let originScore = 0;
                 let diffTotal = 0;
                 let content = "";
                 if (targetRecord) {
@@ -871,7 +873,7 @@
                         let recordItem = `
                             <div class="history-record-item">
                                 <div class="record-item__text">${record.time}</div>
-                                <div class="record-item__info-bar score3-text">${record.change > 0 ? "+" : ""}${record.change}</div>
+                                <div class="record-item__info-bar">${record.change > 0 ? "+" : ""}${record.change}</div>
                             </div>
                         `;
                         recordListHtml += recordItem;
@@ -905,7 +907,7 @@
                         .replace("$originScore$", data.score);
                 }
                 else {
-                    const originScore = data.score - diffTotal;
+                    originScore = data.score - diffTotal;
                     historyItemHeader = historyItemHeader
                         .replace("$originScoreClass$", getProgressBarClassName(originScore, "bg"))
                         .replace("$originScore$", originScore)
@@ -921,6 +923,13 @@
                 historyItem.append(historyItemHeader);
 
                 if (targetRecord) {
+                    let currentScore = originScore;
+                    content.find(".record-item__info-bar").each((index, element) => {
+                        const change = Number($(element).text());
+                        currentScore += change;
+                        $(element).addClass(getProgressBarClassName(currentScore, "text"));
+                    });
+
                     historyItem.append(content);
                 }
 

@@ -229,12 +229,14 @@
             padding: 20px;
             box-sizing: border-box;
             transition: left 500ms, opacity 2s;
+            pointer-events: none;
         }
 
         .history-main.open {
             display: block;
             left: 0;
             opacity: 1;
+            pointer-events: all;
         }
 
         .close-history {
@@ -470,8 +472,8 @@
             </select>
 
             <select name="歷史-顯示模式" id="history-view-select">
-                <option value="預設">預設</option>
-                <option value="變動幅度由高到低" selected>變動幅度 由高到低</option>
+                <option value="預設" selected>預設</option>
+                <option value="變動幅度由高到低">變動幅度 由高到低</option>
                 <option value="變動幅度由低到高">變動幅度 由低到高</option>
             </select>
         </div>
@@ -647,7 +649,7 @@
             var targetCount = target.find(".total-item__count");
             const oldTainScore = Number(targetCount.text()); // 修改前的 tain 積分
             let newTainScore = window.prompt("請輸入分數", oldTainScore);
-            if(newTainScore !== null) {
+            if (newTainScore !== null) {
                 newTainScore = Number(newTainScore);
                 recordSkillHistory("tain", "🦈 TAIN積分", oldTainScore, newTainScore); // 記錄修改歷程
                 $(".total__item[data-type=tain積分] > .total-item__count").text(newTainScore);
@@ -847,7 +849,8 @@
 
         // 歷史區塊
         let historyTypeSelectValue = "有變動";
-        let historyViewSelectValue = "變動幅度由高到低";
+        let historyViewSelectValue = "預設";
+        // let historyViewSelectValue = "變動幅度由高到低";
 
         function recordSkillHistory(skillId, skillName, oldScore, newScore) {
             const history = JSON.parse(window.localStorage.getItem('skillHistory')) || {};
@@ -887,7 +890,48 @@
 
         function renderHistoryByCondition(historyTypeSelectValue, historyViewSelectValue, historyData, dataList) {
             $("#history-list").empty();
-            var resultDataList = [...dataList];
+            // 先按照最後更新日期做排序
+            var resultDataList = [...dataList].sort(function (a, b) {
+                var targetRecordListA = historyData[a.id] ? [...historyData[a.id].list] : [];
+                var targetRecordListB = historyData[b.id] ? [...historyData[b.id].list] : [];
+
+                var lastChangeTimeA = targetRecordListA.length > 0 ?
+                    new Date(targetRecordListA.sort(function (c, d) { return new Date(d.time) - new Date(c.time) })[0].time).getTime()
+                    : 0;
+                var lastChangeTimeB = targetRecordListB.length > 0 ?
+                    new Date(targetRecordListB.sort(function (c, d) { return new Date(d.time) - new Date(c.time) })[0].time).getTime()
+                    : 0;
+                return lastChangeTimeB - lastChangeTimeA;
+            });
+
+            // 平均熟練度
+            const originTotalAvg = otherData.originTotalAvg;
+            const currentTotalAvg = calculateTotalAvg(dataList);
+            let diffAvg = currentTotalAvg - originTotalAvg;
+            diffAvg = (Math.round(diffAvg * 100) / 100);
+
+            var totalItem = `
+        <div class="history-item">
+            ${getHeaderHtml("border-width: 4px;", "", diffAvg !== 0)}
+        </div>
+        `;
+            totalItem = totalItem.replace("$title$", "⚖️ 平均熟練度");
+
+            if (diffAvg === 0) {
+                totalItem = totalItem
+                    .replace("$originScoreClass$", getProgressBarClassName(currentTotalAvg, "bg"))
+                    .replace("$originScore$", currentTotalAvg);
+            }
+            else {
+                totalItem = totalItem
+                    .replace("$originScoreClass$", getProgressBarClassName(originTotalAvg, "bg"))
+                    .replace("$originScore$", originTotalAvg)
+                    .replace("$diffScoreClass$", getProgressBarClassName(currentTotalAvg, "text"))
+                    .replace("$diffScore$", diffAvg > 0 ? "+" + diffAvg : diffAvg)
+                    .replace("$currentScoreClass$", getProgressBarClassName(currentTotalAvg, "bg"))
+                    .replace("$currentScore$", currentTotalAvg);
+            }
+            $("#history-list").append(totalItem);
 
             if ("有變動" === historyTypeSelectValue) {
                 resultDataList = resultDataList.filter(x => !!historyData[x.id]);
@@ -909,35 +953,6 @@
                     }
                     return { ...x, diff: diff }
                 });
-
-                // 平均熟練度
-                const originTotalAvg = otherData.originTotalAvg;
-                const currentTotalAvg = calculateTotalAvg(dataList);
-                let diffAvg = currentTotalAvg - originTotalAvg;
-                diffAvg = (Math.round(diffAvg * 100) / 100);
-
-                var totalItem = `
-            <div class="history-item">
-                ${getHeaderHtml("border-width: 4px;", "", diffAvg !== 0)}
-            </div>
-            `;
-                totalItem = totalItem.replace("$title$", "⚖️ 平均熟練度");
-
-                if (diffAvg === 0) {
-                    totalItem = totalItem
-                        .replace("$originScoreClass$", getProgressBarClassName(currentTotalAvg, "bg"))
-                        .replace("$originScore$", currentTotalAvg);
-                }
-                else {
-                    totalItem = totalItem
-                        .replace("$originScoreClass$", getProgressBarClassName(originTotalAvg, "bg"))
-                        .replace("$originScore$", originTotalAvg)
-                        .replace("$diffScoreClass$", getProgressBarClassName(currentTotalAvg, "text"))
-                        .replace("$diffScore$", diffAvg > 0 ? "+" + diffAvg : diffAvg)
-                        .replace("$currentScoreClass$", getProgressBarClassName(currentTotalAvg, "bg"))
-                        .replace("$currentScore$", currentTotalAvg);
-                }
-                $("#history-list").append(totalItem);
 
 
                 if ("變動幅度由低到高" === historyViewSelectValue) {

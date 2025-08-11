@@ -664,9 +664,9 @@
 
                 let exportContent = "";
 
-                exportContent += (exportMainKeyWordStart + window.localStorage.getItem("dataList") + exportMainKeyWordEnd); // 主要資料
-                exportContent += (exportHistoryKeyWordStart + window.localStorage.getItem('skillHistory') + exportHistoryKeyWordEnd); // 歷史資料
-                exportContent += (exportOtherDataKeyWordStart + window.localStorage.getItem('otherData') + exportOtherDataKeyWordEnd); // 其他資料
+                exportContent += (exportMainKeyWordStart + JSON.stringify(JSON.parse(window.localStorage.getItem("dataList")), null, ' ') + exportMainKeyWordEnd + "\n"); // 主要資料
+                exportContent += (exportHistoryKeyWordStart + JSON.stringify(JSON.parse(window.localStorage.getItem('skillHistory')), null, ' ') + exportHistoryKeyWordEnd + "\n"); // 歷史資料
+                exportContent += (exportOtherDataKeyWordStart + JSON.stringify(JSON.parse(window.localStorage.getItem('otherData')), null, ' ') + exportOtherDataKeyWordEnd + "\n"); // 其他資料
 
                 const blob = new Blob([exportContent], { type: "text/plain" });
 
@@ -682,6 +682,7 @@
             }
             else if ("匯入" === func) {
                 $(".file-container").css("display", "flex");
+                $(".file-container [name=import-file]").trigger("click");
             }
         });
 
@@ -698,13 +699,13 @@
                     if (fileContent && fileContent.length > 0) {
 
                         const dataListStr = fileContent.slice(fileContent.indexOf(exportMainKeyWordStart) + exportMainKeyWordStart.length, fileContent.indexOf(exportMainKeyWordEnd));
-                        window.localStorage.setItem("dataList", dataListStr);
+                        window.localStorage.setItem("dataList", JSON.stringify(JSON.parse(dataListStr)));
 
                         const historyStr = fileContent.slice(fileContent.indexOf(exportHistoryKeyWordStart) + exportHistoryKeyWordStart.length, fileContent.indexOf(exportHistoryKeyWordEnd));
-                        window.localStorage.setItem("skillHistory", historyStr);
+                        window.localStorage.setItem("skillHistory", JSON.stringify(JSON.parse(historyStr)));
 
                         const otherDataStr = fileContent.slice(fileContent.indexOf(exportOtherDataKeyWordStart) + exportOtherDataKeyWordStart.length, fileContent.indexOf(exportOtherDataKeyWordEnd));
-                        window.localStorage.setItem("otherData", otherDataStr);
+                        window.localStorage.setItem("otherData", JSON.stringify(JSON.parse(otherDataStr)));
 
                         alert("匯入資料成功")
                         window.location.reload();
@@ -747,72 +748,74 @@
 
         function getDataList() {
             var dataList = window.localStorage.getItem("dataList");
+            const initDataList = [
+                { name: "🌱 基礎 - 正手對打", score: 83, type: "基礎", id: "basic-1", originOrder: 0 },
+                { name: "🌱 基礎 - 正手切球", score: 73, type: "基礎", id: "basic-2", originOrder: 1 },
+                { name: "🌱 基礎 - 反手對打", score: 79, type: "基礎", id: "basic-3", originOrder: 2 },
+                { name: "🌱 基礎 - 反手切球", score: 71, type: "基礎", id: "basic-4", originOrder: 3 },
+
+                { name: "⚔️ 攻擊 - 正手平拉", score: 80, type: "攻擊", id: "attack-1", originOrder: 4 },
+                { name: "⚔️ 攻擊 - 正手下旋拉", score: 72, type: "攻擊", id: "attack-2", originOrder: 5 },
+                { name: "⚔️ 攻擊 - 正手殺球(高球平球)", score: 71, type: "攻擊", id: "attack-3", originOrder: 6 },
+                { name: "⚔️ 攻擊 - 正手殺球(一般高度平球)", score: 78, type: "攻擊", id: "attack-4", originOrder: 7 },
+                { name: "⚔️ 攻擊 - 正手殺球(高球下旋)", score: 68, type: "攻擊", id: "attack-5", originOrder: 8 },
+                { name: "⚔️ 攻擊 - 正手挑球", score: 65, type: "攻擊", id: "attack-6", originOrder: 9 },
+                { name: "⚔️ 攻擊 - 正手切球劈長", score: 60, type: "攻擊", id: "attack-7", originOrder: 10 },
+                { name: "⚔️ 攻擊 - 正手撇直線長球", score: 50, type: "攻擊", id: "attack-8", originOrder: 11 },
+                { name: "⚔️ 攻擊 - 反手平拉", score: 70, type: "攻擊", id: "attack-9", originOrder: 12 },
+                { name: "⚔️ 攻擊 - 反手下旋拉", score: 68, type: "攻擊", id: "attack-10", originOrder: 13 },
+                { name: "⚔️ 攻擊 - 反手殺球(高球平球)", score: 70, type: "攻擊", id: "attack-11", originOrder: 14 },
+                { name: "⚔️ 攻擊 - 反手殺球(一般高度平球)", score: 73, type: "攻擊", id: "attack-12", originOrder: 15 },
+                { name: "⚔️ 攻擊 - 反手殺球(高球下旋)", score: 69, type: "攻擊", id: "attack-13", originOrder: 16 },
+                { name: "⚔️ 攻擊 - 反手挑球", score: 60, type: "攻擊", id: "attack-14", originOrder: 17 },
+                { name: "⚔️ 攻擊 - 反手切球劈長", score: 65, type: "攻擊", id: "attack-15", originOrder: 18 },
+                { name: "⚔️ 攻擊 - 反手擰球", score: 40, type: "攻擊", id: "attack-16", originOrder: 19 },
+
+                { name: "☯️ 防守 - 正手切球擺短", score: 60, type: "防守", id: "defend-1", originOrder: 20 },
+                { name: "☯️ 防守 - 正手擋拉球(一般高度)", score: 71, type: "防守", id: "defend-2", originOrder: 21 },
+                { name: "☯️ 防守 - 正手擋拉球(半高)", score: 65, type: "防守", id: "defend-3", originOrder: 22 },
+                { name: "☯️ 防守 - 正手擋殺球", score: 67, type: "防守", id: "defend-4", originOrder: 23 },
+                { name: "☯️ 防守 - 反手切球擺短", score: 63, type: "防守", id: "defend-5", originOrder: 24 },
+                { name: "☯️ 防守 - 反手擋拉球(一般高度)", score: 83, type: "防守", id: "defend-6", originOrder: 25 },
+                { name: "☯️ 防守 - 反手擋拉球(半高)", score: 74, type: "防守", id: "defend-7", originOrder: 26 },
+                { name: "☯️ 防守 - 反手擋殺球", score: 72, type: "防守", id: "defend-8", originOrder: 27 },
+                { name: "☯️ 防守 - 反手側切", score: 38, type: "防守", id: "defend-9", originOrder: 28 },
+
+                { name: "👟 腳步 - 固定兩點(正反)", score: 75, type: "腳步", id: "step-1", originOrder: 29 },
+                { name: "👟 腳步 - 固定三點(正反側身)", score: 66, type: "腳步", id: "step-2", originOrder: 30 },
+                { name: "👟 腳步 - 不定點(正反)", score: 70, type: "腳步", id: "step-3", originOrder: 31 },
+                { name: "👟 腳步 - 不定點(全台)", score: 64, type: "腳步", id: "step-4", originOrder: 32 },
+
+                { name: "🧩 銜接 - 正手位接球(長球->殺球或拉球，短球->切球)", score: 62, type: "銜接", id: "connect-1", originOrder: 33 },
+                { name: "🧩 銜接 - 反手位接球(長球->殺球或拉球，短球->切球)", score: 62, type: "銜接", id: "connect-2", originOrder: 34 },
+
+                { name: "▶️ 發球 - 發左上旋長球/短球", score: 65, type: "發球", id: "start-1", originOrder: 35 },
+                { name: "▶️ 發球 - 發左下旋長球/短球", score: 65, type: "發球", id: "start-2", originOrder: 36 },
+                { name: "▶️ 發球 - 發右上旋長球/短球", score: 70, type: "發球", id: "start-3", originOrder: 37 },
+                { name: "▶️ 發球 - 發右下旋長球/短球", score: 72, type: "發球", id: "start-4", originOrder: 38 },
+                { name: "▶️ 發球 - 發短空", score: 70, type: "發球", id: "start-5", originOrder: 39 },
+                { name: "▶️ 發球 - 發快速球", score: 66, type: "發球", id: "start-6", originOrder: 40 },
+
+                // { name: "🔍 接球 - 接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球", score: 65, type: "接球", id: "catch-1", originOrder: 41 },
+                { name: "🔍 接球 - 接左上旋長球/短球", score: 68, type: "接球", id: "catch-1", originOrder: 42 },
+                { name: "🔍 接球 - 接左下旋長球/短球", score: 71, type: "接球", id: "catch-2", originOrder: 43 },
+                { name: "🔍 接球 - 接右上旋長球/短球", score: 66, type: "接球", id: "catch-3", originOrder: 44 },
+                { name: "🔍 接球 - 接右下旋長球/短球", score: 69, type: "接球", id: "catch-4", originOrder: 45 },
+                { name: "🔍 接球 - 接短空", score: 70, type: "接球", id: "catch-5", originOrder: 46 },
+                { name: "🔍 接球 - 接快速球", score: 65, type: "接球", id: "catch-6", originOrder: 47 },
+                { name: "🔍 接球 - 接下旋/微下旋長球/短球", score: 69, type: "接球", id: "catch-7", originOrder: 41 },
+
+                { name: "🥋 策略 - 發短空->殺球", score: 70, type: "策略", id: "strategy-1", originOrder: 48 }
+            ];
+            const initToalAvg = calculateTotalAvg(initDataList);
+            const otherData = {
+                originTotalAvg: initToalAvg,
+                originTainScore: 900
+            }
+            window.localStorage.setItem("otherData", JSON.stringify(otherData));
+
             if (dataList === null) {
-                dataList = [
-                    { name: "🌱 基礎 - 正手對打", score: 83, type: "基礎", id: "basic-1", originOrder: 0 },
-                    { name: "🌱 基礎 - 正手切球", score: 73, type: "基礎", id: "basic-2", originOrder: 1 },
-                    { name: "🌱 基礎 - 反手對打", score: 79, type: "基礎", id: "basic-3", originOrder: 2 },
-                    { name: "🌱 基礎 - 反手切球", score: 71, type: "基礎", id: "basic-4", originOrder: 3 },
-
-                    { name: "⚔️ 攻擊 - 正手平拉", score: 80, type: "攻擊", id: "attack-1", originOrder: 4 },
-                    { name: "⚔️ 攻擊 - 正手下旋拉", score: 72, type: "攻擊", id: "attack-2", originOrder: 5 },
-                    { name: "⚔️ 攻擊 - 正手殺球(高球平球)", score: 71, type: "攻擊", id: "attack-3", originOrder: 6 },
-                    { name: "⚔️ 攻擊 - 正手殺球(一般高度平球)", score: 78, type: "攻擊", id: "attack-4", originOrder: 7 },
-                    { name: "⚔️ 攻擊 - 正手殺球(高球下旋)", score: 68, type: "攻擊", id: "attack-5", originOrder: 8 },
-                    { name: "⚔️ 攻擊 - 正手挑球", score: 65, type: "攻擊", id: "attack-6", originOrder: 9 },
-                    { name: "⚔️ 攻擊 - 正手切球劈長", score: 60, type: "攻擊", id: "attack-7", originOrder: 10 },
-                    { name: "⚔️ 攻擊 - 正手撇直線長球", score: 50, type: "攻擊", id: "attack-8", originOrder: 11 },
-                    { name: "⚔️ 攻擊 - 反手平拉", score: 70, type: "攻擊", id: "attack-9", originOrder: 12 },
-                    { name: "⚔️ 攻擊 - 反手下旋拉", score: 68, type: "攻擊", id: "attack-10", originOrder: 13 },
-                    { name: "⚔️ 攻擊 - 反手殺球(高球平球)", score: 70, type: "攻擊", id: "attack-11", originOrder: 14 },
-                    { name: "⚔️ 攻擊 - 反手殺球(一般高度平球)", score: 73, type: "攻擊", id: "attack-12", originOrder: 15 },
-                    { name: "⚔️ 攻擊 - 反手殺球(高球下旋)", score: 69, type: "攻擊", id: "attack-13", originOrder: 16 },
-                    { name: "⚔️ 攻擊 - 反手挑球", score: 60, type: "攻擊", id: "attack-14", originOrder: 17 },
-                    { name: "⚔️ 攻擊 - 反手切球劈長", score: 65, type: "攻擊", id: "attack-15", originOrder: 18 },
-                    { name: "⚔️ 攻擊 - 反手擰球", score: 40, type: "攻擊", id: "attack-16", originOrder: 19 },
-
-                    { name: "☯️ 防守 - 正手切球擺短", score: 60, type: "防守", id: "defend-1", originOrder: 20 },
-                    { name: "☯️ 防守 - 正手擋拉球(一般高度)", score: 71, type: "防守", id: "defend-2", originOrder: 21 },
-                    { name: "☯️ 防守 - 正手擋拉球(半高)", score: 65, type: "防守", id: "defend-3", originOrder: 22 },
-                    { name: "☯️ 防守 - 正手擋殺球", score: 67, type: "防守", id: "defend-4", originOrder: 23 },
-                    { name: "☯️ 防守 - 反手切球擺短", score: 63, type: "防守", id: "defend-5", originOrder: 24 },
-                    { name: "☯️ 防守 - 反手擋拉球(一般高度)", score: 83, type: "防守", id: "defend-6", originOrder: 25 },
-                    { name: "☯️ 防守 - 反手擋拉球(半高)", score: 74, type: "防守", id: "defend-7", originOrder: 26 },
-                    { name: "☯️ 防守 - 反手擋殺球", score: 72, type: "防守", id: "defend-8", originOrder: 27 },
-                    { name: "☯️ 防守 - 反手側切", score: 38, type: "防守", id: "defend-9", originOrder: 28 },
-
-                    { name: "👟 腳步 - 固定兩點(正反)", score: 75, type: "腳步", id: "step-1", originOrder: 29 },
-                    { name: "👟 腳步 - 固定三點(正反側身)", score: 66, type: "腳步", id: "step-2", originOrder: 30 },
-                    { name: "👟 腳步 - 不定點(正反)", score: 70, type: "腳步", id: "step-3", originOrder: 31 },
-                    { name: "👟 腳步 - 不定點(全台)", score: 64, type: "腳步", id: "step-4", originOrder: 32 },
-
-                    { name: "🧩 銜接 - 正手位接球(長球->殺球或拉球，短球->切球)", score: 62, type: "銜接", id: "connect-1", originOrder: 33 },
-                    { name: "🧩 銜接 - 反手位接球(長球->殺球或拉球，短球->切球)", score: 62, type: "銜接", id: "connect-2", originOrder: 34 },
-
-                    { name: "▶️ 發球 - 發左上旋長球/短球", score: 65, type: "發球", id: "start-1", originOrder: 35 },
-                    { name: "▶️ 發球 - 發左下旋長球/短球", score: 65, type: "發球", id: "start-2", originOrder: 36 },
-                    { name: "▶️ 發球 - 發右上旋長球/短球", score: 70, type: "發球", id: "start-3", originOrder: 37 },
-                    { name: "▶️ 發球 - 發右下旋長球/短球", score: 72, type: "發球", id: "start-4", originOrder: 38 },
-                    { name: "▶️ 發球 - 發短空", score: 70, type: "發球", id: "start-5", originOrder: 39 },
-                    { name: "▶️ 發球 - 發快速球", score: 66, type: "發球", id: "start-6", originOrder: 40 },
-
-                    // { name: "🔍 接球 - 接左旋/右旋+上旋/下旋+長球/短球+短空+快速球，並能夠使用逆旋轉/順旋轉接球", score: 65, type: "接球", id: "catch-1", originOrder: 41 },
-                    { name: "🔍 接球 - 接左上旋長球/短球", score: 68, type: "接球", id: "catch-1", originOrder: 41 },
-                    { name: "🔍 接球 - 接左下旋長球/短球", score: 71, type: "接球", id: "catch-2", originOrder: 42 },
-                    { name: "🔍 接球 - 接右上旋長球/短球", score: 66, type: "接球", id: "catch-3", originOrder: 43 },
-                    { name: "🔍 接球 - 接右下旋長球/短球", score: 69, type: "接球", id: "catch-4", originOrder: 44 },
-                    { name: "🔍 接球 - 接短空", score: 70, type: "接球", id: "catch-5", originOrder: 45 },
-                    { name: "🔍 接球 - 接快速球", score: 65, type: "接球", id: "catch-6", originOrder: 46 },
-
-                    { name: "🥋 策略 - 發短空->殺球", score: 70, type: "策略", id: "strategy-1", originOrder: 47 }
-                ];
-                const toalAvg = calculateTotalAvg(dataList);
-                const otherData = {
-                    originTotalAvg: toalAvg,
-                    originTainScore: 900
-                }
-                window.localStorage.setItem("otherData", JSON.stringify(otherData));
-                window.localStorage.setItem("dataList", JSON.stringify(dataList));
+                window.localStorage.setItem("dataList", JSON.stringify(initDataList));
             } else {
                 dataList = JSON.parse(dataList);
             }
@@ -861,7 +864,6 @@
             }
 
             history[skillId].list.push({
-                name: skillName,
                 time: timestamp,
                 change: newScore - oldScore,
                 newScore: newScore,
@@ -896,10 +898,10 @@
                 var targetRecordListB = historyData[b.id] ? [...historyData[b.id].list] : [];
 
                 var lastChangeTimeA = targetRecordListA.length > 0 ?
-                    new Date(targetRecordListA.sort(function (c, d) { return new Date(d.time) - new Date(c.time) })[0].time).getTime()
+                    new Date(targetRecordListA.sort(function (c, d) { return new Date(d.time) - new Date(c.time) })[0].time.slice(0, 10)).getTime()
                     : 0;
                 var lastChangeTimeB = targetRecordListB.length > 0 ?
-                    new Date(targetRecordListB.sort(function (c, d) { return new Date(d.time) - new Date(c.time) })[0].time).getTime()
+                    new Date(targetRecordListB.sort(function (c, d) { return new Date(d.time) - new Date(c.time) })[0].time.slice(0, 10)).getTime()
                     : 0;
                 return lastChangeTimeB - lastChangeTimeA;
             });

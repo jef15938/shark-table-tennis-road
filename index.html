@@ -727,23 +727,26 @@
 
         // 開啟歷史
         $(".grow-up-btn").on("click", function () {
-            initHistoryPage();
-            $("#history-main").show("fast", function () {
-                $("#history-main").addClass("open");
-                $("#container-main").hide();
-            });
-            $("#container-main").removeClass("open");
-            $('html, body').animate({ scrollTop: 0 }, 'fast');
+            if ($("#container-main").hasClass("open")) {
+                initHistoryPage();
+                $("#container-main").removeClass("open");
+                $("#history-main").show("fast", function () {
+                    $("#history-main").addClass("open");
+                    $("#container-main").hide();
+                });
+                $('html, body').animate({ scrollTop: 0 }, 'fast');
+            }
         });
 
         $(".history-main").on("click", ".close-history", () => {
-            $("#history-main").removeClass("open");
-            $("#container-main").show();
-            $('html, body').animate({ scrollTop: 0 }, 'fast');
-            setTimeout(function () {
-                $("#history-main").hide();
-                $("#container-main").addClass("open");
-            }, 400);
+            if ($("#history-main").hasClass("open")) {
+                $("#history-main").removeClass("open");
+                $("#container-main").show("normal", function () {
+                    $("#container-main").addClass("open");
+                    $("#history-main").hide();
+                });
+                $('html, body').animate({ scrollTop: 0 }, 'fast');
+            }
         });
 
         function getDataList() {
